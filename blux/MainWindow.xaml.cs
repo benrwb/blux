@@ -24,6 +24,18 @@ namespace blux
         public MainWindow()
         {
             InitializeComponent();
+
+            MagInitialize();
+
+            Button_Click_1(null, null);
+
+            // Use Task Scheduler to start this program at the desired time of day
+        }
+
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            MagUninitialize();
         }
 
 
@@ -43,53 +55,69 @@ namespace blux
             [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] pEffect
         );
 
+        //var g_Default = new float[,] {
+        //    /*               OUT     OUT   OUT     OUT        */
+        //    /*               Red    Green  Blue   Alpha       */
+        //    /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        //    /* IN Green */ { 0.0f,  1.0f,  0.0f,  0.0f,  0.0f },
+        //    /* IN Blue  */ { 0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
+        //    /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+        //    /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
+        //};
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            MagInitialize();
-
-
-            // Initialize color transformation matrices used to apply grayscale and to 
-            // restore the original screen color.
-            var g_MagEffectGrayscale = new float[,] {
-                { 0.3f,  0.3f,  0.3f,  0.0f,  0.0f },
-                { 0.6f,  0.6f,  0.6f,  0.0f,  0.0f },
-                { 0.1f,  0.1f,  0.1f,  0.0f,  0.0f },
-                { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-                { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-            };
 
             // http://msdn.microsoft.com/en-us/library/windows/desktop/ms533875%28v=vs.85%29.aspx
             var g_RedTest = new float[,] {
-                { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },// 1.0 = Leave red on full
-                { 0.0f,  0.5f,  0.0f,  0.0f,  0.0f },// 0.5 = Reduce green to half
-                { 0.0f,  0.0f,  0.5f,  0.0f,  0.0f },// 0.5 = Reduce blue to half
-                { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-                { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
+                /*               OUT     OUT   OUT     OUT        */
+                /*               Red    Green  Blue   Alpha       */
+                /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f }, // 1.0 = Leave red on full
+                /* IN Green */ { 0.0f,  0.5f,  0.0f,  0.0f,  0.0f }, // 0.5 = Reduce green to half
+                /* IN Blue  */ { 0.0f,  0.0f,  0.5f,  0.0f,  0.0f }, // 0.5 = Reduce blue to half
+                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
             };
 
-            //var g_MagEffectIdentity = new float[,] {
-            //    { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
-            //    { 0.0f,  1.0f,  0.0f,  0.0f,  0.0f },
-            //    { 0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
-            //    { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-            //    { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-            //};
-
             MagSetFullscreenColorEffect(g_RedTest);
-
-
-            //System.Threading.Thread.Sleep(1000);
-            
-
-
+           
         }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            // http://msdn.microsoft.com/en-us/library/windows/desktop/ms533875%28v=vs.85%29.aspx
+            var g_AnotherTest = new float[,] {
+                /*               OUT     OUT   OUT     OUT        */
+                /*               Red    Green  Blue   Alpha       */
+                /* IN Red   */ { 0.8f,  0.1f,  0.1f,  0.0f,  0.0f }, 
+                /* IN Green */ { 0.1f,  0.5f,  0.0f,  0.0f,  0.0f }, 
+                /* IN Blue  */ { 0.1f,  0.0f,  0.5f,  0.0f,  0.0f }, 
+                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
+            };
+
+            MagSetFullscreenColorEffect(g_AnotherTest);
+        }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MagUninitialize();
+            var g_MagEffectGrayscale = new float[,] {
+                /*               OUT     OUT   OUT     OUT        */
+                /*               Red    Green  Blue   Alpha       */
+                /* IN Red   */ { 0.3f,  0.3f,  0.3f,  0.0f,  0.0f },
+                /* IN Green */ { 0.6f,  0.6f,  0.6f,  0.0f,  0.0f },
+                /* IN Blue  */ { 0.1f,  0.1f,  0.1f,  0.0f,  0.0f },
+                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
+
+            };
+
+            MagSetFullscreenColorEffect(g_MagEffectGrayscale);
         }
 
+       
+      
 
        
 
