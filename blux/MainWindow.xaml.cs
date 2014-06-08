@@ -23,13 +23,30 @@ namespace blux
     {
         public MainWindow()
         {
+            // Use Task Scheduler to start this program at the desired time of day
+
             InitializeComponent();
 
             MagInitialize();
 
+            var g_Default = new float[,] {
+                /*               OUT     OUT   OUT     OUT        */
+                /*               Red    Green  Blue   Alpha       */
+                /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+                /* IN Green */ { 0.0f,  1.0f,  0.0f,  0.0f,  0.0f },
+                /* IN Blue  */ { 0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
+                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
+            };
+            StringBuilder sb = new StringBuilder();
+            foreach (var row in g_Default)
+            {
+                sb.Append("\t" + row.ToString());
+            }
+            txtEditor.Text = sb.ToString();
+
             Button_Click_1(null, null);
 
-            // Use Task Scheduler to start this program at the desired time of day
         }
 
 
@@ -114,6 +131,25 @@ namespace blux
             };
 
             MagSetFullscreenColorEffect(g_MagEffectGrayscale);
+        }
+
+
+        private void txtEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var vals = txtEditor.Text.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            try
+            {
+                if (vals.Length == 25)
+                {
+                    var floats = new float[5, 5];
+                    int c = 0;
+                    for (int a = 0; a < 5; a++)
+                        for (int b = 0; b < 5; b++)
+                            floats[a, b] = Convert.ToSingle(vals[c++]);
+                    MagSetFullscreenColorEffect(floats);
+                }
+            }
+            catch { }
         }
 
        

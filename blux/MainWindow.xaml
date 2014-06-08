@@ -6,6 +6,7 @@
         <Button Content="Button" HorizontalAlignment="Left" Margin="138,63,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="176,115,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="350,72,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_2"/>
+        <TextBox x:Name="txtEditor" Height="137" Margin="125,152,93.4,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" TextChanged="txtEditor_TextChanged" AcceptsTab="True"/>
 
     </Grid>
 </Window>
