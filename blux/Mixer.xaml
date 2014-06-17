@@ -1,0 +1,36 @@
+﻿<Window x:Class="blux.Mixer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         Title="Mixer" Height="324" Width="303" ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ControlTemplate x:Key="template1">
+                <Grid>
+                    <Ellipse Width="30" Height="30" Fill="Red" />
+                    <TextBlock Text="R" FontWeight="Bold" Foreground="White" Padding="10"></TextBlock>
+                </Grid>
+            </ControlTemplate>
+            <ControlTemplate x:Key="template2">
+                <Grid>
+                    <Ellipse Width="30" Height="30" Fill="Lime"/>
+                    <TextBlock Text="G" FontWeight="Bold" Foreground="white" Padding="10"></TextBlock>
+                </Grid>
+            </ControlTemplate>
+            <ControlTemplate x:Key="template3">
+                <Grid>
+                <Ellipse Width="30" Height="30" Fill="Blue"/>
+                <TextBlock Text="B" FontWeight="Bold" Foreground="White" Padding="10"></TextBlock>
+                </Grid>
+            </ControlTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Canvas Name="myCanvas">
+
+        <Thumb Name="myThumbR" DragDelta="myThumb_DragDelta"  Canvas.Left="0" Canvas.Top="0" Template="{StaticResource template1}"/>
+        <Thumb Name="myThumbG" DragDelta="myThumb_DragDelta"  Canvas.Left="255" Canvas.Top="0" Template="{StaticResource template2}"/>
+        <Thumb Name="myThumbB" DragDelta="myThumb_DragDelta"  Canvas.Left="0" Canvas.Top="255" Template="{StaticResource template3}"/>
+
+    </Canvas>
+
+</Window>

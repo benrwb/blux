@@ -45,7 +45,6 @@ namespace blux
             }
             txtEditor.Text = sb.ToString();
 
-            Button_Click_1(null, null);
 
         }
 
@@ -72,21 +71,29 @@ namespace blux
             [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] pEffect
         );
 
-        //var g_Default = new float[,] {
-        //    /*               OUT     OUT   OUT     OUT        */
-        //    /*               Red    Green  Blue   Alpha       */
-        //    /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
-        //    /* IN Green */ { 0.0f,  1.0f,  0.0f,  0.0f,  0.0f },
-        //    /* IN Blue  */ { 0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
-        //    /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-        //    /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-        //};
+
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            // Default
+            var Default = new float[,] {
+                /*               OUT     OUT   OUT     OUT        */
+                /*               Red    Green  Blue   Alpha       */
+                /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+                /* IN Green */ { 0.0f,  1.0f,  0.0f,  0.0f,  0.0f },
+                /* IN Blue  */ { 0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
+                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
+            };
+            Set(Default);
+        }
+
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
 
             // http://msdn.microsoft.com/en-us/library/windows/desktop/ms533875%28v=vs.85%29.aspx
-            var g_RedTest = new float[,] {
+            var Red1 = new float[,] {
                 /*               OUT     OUT   OUT     OUT        */
                 /*               Red    Green  Blue   Alpha       */
                 /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f }, // 1.0 = Leave red on full
@@ -96,14 +103,14 @@ namespace blux
                 /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
             };
 
-            MagSetFullscreenColorEffect(g_RedTest);
+            Set(Red1);
            
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             // http://msdn.microsoft.com/en-us/library/windows/desktop/ms533875%28v=vs.85%29.aspx
-            var g_AnotherTest = new float[,] {
+            var Red2 = new float[,] {
                 /*               OUT     OUT   OUT     OUT        */
                 /*               Red    Green  Blue   Alpha       */
                 /* IN Red   */ { 0.8f,  0.1f,  0.1f,  0.0f,  0.0f }, 
@@ -113,13 +120,13 @@ namespace blux
                 /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
             };
 
-            MagSetFullscreenColorEffect(g_AnotherTest);
+            Set(Red2);
         }
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var g_MagEffectGrayscale = new float[,] {
+            var Grayscale = new float[,] {
                 /*               OUT     OUT   OUT     OUT        */
                 /*               Red    Green  Blue   Alpha       */
                 /* IN Red   */ { 0.3f,  0.3f,  0.3f,  0.0f,  0.0f },
@@ -130,9 +137,20 @@ namespace blux
 
             };
 
-            MagSetFullscreenColorEffect(g_MagEffectGrayscale);
+            Set(Grayscale);
         }
 
+        private void Set(float[,] matrix)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int a = 0; a < 5; a++)
+                for (int b = 0; b < 5; b++)
+                    sb.Append("\t" + matrix[a, b]);
+            txtEditor.Text = sb.ToString();
+
+            
+            //MagSetFullscreenColorEffect(matrix);
+        }
 
         private void txtEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -146,12 +164,49 @@ namespace blux
                     for (int a = 0; a < 5; a++)
                         for (int b = 0; b < 5; b++)
                             floats[a, b] = Convert.ToSingle(vals[c++]);
+
+                    txtSummary.Content = string.Format("Red: {0}%, Green: {1}%, Blue: {2}%",
+                        /* Red   */ (floats[0, 0] + floats[1, 0] + floats[2, 0]) * 100,
+                        /* Green */ (floats[0, 1] + floats[1, 1] + floats[2, 1]) * 100,
+                        /* Blue  */ (floats[0, 2] + floats[1, 2] + floats[2, 2]) * 100
+                    );
+
                     MagSetFullscreenColorEffect(floats);
                 }
             }
             catch { }
         }
 
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            // Gray 2
+            txtEditor.Text = "	0.69	0.1	0.12	0	0	0.18	0.25	0.13	0	0	0.11	0.19	0.36	0	0	0	0	0	1	0	0	0	0	0	1";
+        }
+
+        
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            // Red 3
+            txtEditor.Text = "	0.3	0	0	0	0	0.5	0.0	0	0	0	0.2	0	0.0	0	0	0	0	0	1	0	0	0	0	0	1";
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            new Mixer(txtEditor).Show();
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            txtEditor.Text = "	0.97	0.04	0.02	0	0	0.03	0.19	0.11	0	0	0	0.14	0.11	0	0	0	0	0	1	0	0	0	0	0	1";
+        }
+
+        private void Button_Click_8(object sender, RoutedEventArgs e)
+        {
+            txtEditor.Text = "	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	1";
+        }
+
+      
        
       
 
