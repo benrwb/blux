@@ -179,16 +179,14 @@ namespace blux
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            // Gray 2
-            txtEditor.Text = "	0.69	0.1	0.12	0	0	0.18	0.25	0.13	0	0	0.11	0.19	0.36	0	0	0	0	0	1	0	0	0	0	0	1";
+            txtEditor.Text = "	1	0	0	0	0	0	0.66	0	0	0	0	0	0.33	0	0	0	0	0	1	0	0	0	0	0	1";
         }
 
         
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            // Red 3
-            txtEditor.Text = "	0.3	0	0	0	0	0.5	0.0	0	0	0	0.2	0	0.0	0	0	0	0	0	1	0	0	0	0	0	1";
+            txtEditor.Text = "	0.299	0	0	0	0	0.587	0.0	0	0	0	0.114	0	0.0	0	0	0	0	0	1	0	0	0	0	0	1";
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -198,12 +196,31 @@ namespace blux
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
-            txtEditor.Text = "	0.97	0.04	0.02	0	0	0.03	0.19	0.11	0	0	0	0.14	0.11	0	0	0	0	0	1	0	0	0	0	0	1";
+            txtEditor.Text = "	0.70	0.04	0.02	0	0	0.30	0.19	0.11	0	0	0	0.14	0.11	0	0	0	0	0	1	0	0	0	0	0	1";
         }
 
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
-            txtEditor.Text = "	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	1";
+            txtEditor.Text = "	1	0	0	0	0	0	0.66	0	0	0	0	0	0.01	0	0	0	0	0	1	0	0	0	0	0	1";
+        }
+
+        private void Button_Click_9(object sender, RoutedEventArgs e)
+        {
+            txtEditor.Text = "	0.6	0	0	0	0	0.4	0.0	0	0	0	0.0	0	0.0	0	0	0	0	0	1	0	0	0	0	0	1";
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var Default = new float[,] {
+                /*               OUT     OUT   OUT     OUT        */
+                /*               Red    Green  Blue   Alpha       */
+                /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+                /* IN Green */ { 0.0f,  1f - ((float)slider1.Value / 256f),  0.0f,  0.0f,  0.0f },
+                /* IN Blue  */ { 0.0f,  0.0f,  Math.Max(0, 1f - ((float)slider1.Value / 128f)),  0.0f,  0.0f },
+                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
+            };
+            Set(Default);
         }
 
       
