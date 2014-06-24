@@ -211,26 +211,88 @@ namespace blux
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            var Default = new float[,] {
+            double red, green, blue;
+            ColorTemp(slider1.Value, out red, out green, out blue);
+            var rrrr = (float)Math.Round(red / 255, 2);
+            var gggg = (float)Math.Round(green / 255, 2);
+            var bbbb = (float)Math.Round(blue / 255, 2);
+            var Temp = new float[,] {
                 /*               OUT     OUT   OUT     OUT        */
                 /*               Red    Green  Blue   Alpha       */
-                /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
-                /* IN Green */ { 0.0f,  1f - ((float)slider1.Value / 256f),  0.0f,  0.0f,  0.0f },
-                /* IN Blue  */ { 0.0f,  0.0f,  Math.Max(0, 1f - ((float)slider1.Value / 128f)),  0.0f,  0.0f },
+                /* IN Red   */ { rrrr,  0.0f,  0.0f,  0.0f,  0.0f },
+                /* IN Green */ { 0.0f,  gggg,  0.0f,  0.0f,  0.0f },
+                /* IN Blue  */ { 0.0f,  0.0f,  bbbb,  0.0f,  0.0f },
                 /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
                 /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
             };
-            Set(Default);
+            Set(Temp);
         }
 
-      
-       
-      
-
-       
 
 
-       
+
+
+
+
+
+        private void ColorTemp(double temp, out double Red, out double Green, out double Blue)
+        {
+            // http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/ 
+            // Start with a temperature, in Kelvin, somewhere between 1000 and 40000.  (Other values may work,
+            // but I can't make any promises about the quality of the algorithm's estimates above 40000 K.)
+            // Note also that the temperature and color variables need to be declared as floating-point.
+
+            var Temperature = temp / 100;
+
+            // Calculate Red:
+            if (Temperature <= 66)
+            {
+                Red = 255;
+            }
+            else
+            {
+                Red = Temperature - 60;
+                Red = 329.698727446 * Math.Pow(Red, -0.1332047592);
+                if (Red < 0) Red = 0;
+                if (Red > 255) Red = 255;
+            }
+
+            // Calculate Green:
+            if (Temperature <= 66)
+            {
+                Green = Temperature;
+                Green = 99.4708025861 * Math.Log(Green) - 161.1195681661;
+                if (Green < 0) Green = 0;
+                if (Green > 255) Green = 255;
+            }
+            else
+            {
+                Green = Temperature - 60;
+                Green = 288.1221695283 * Math.Pow(Green, -0.0755148492);
+                if (Green < 0) Green = 0;
+                if (Green > 255) Green = 255;
+            }
+
+            // Calculate Blue:
+            if (Temperature >= 66)
+            {
+                Blue = 255;
+            }
+            else
+            {
+                if (Temperature <= 19)
+                {
+                    Blue = 0;
+                }
+                else
+                {
+                    Blue = Temperature - 10;
+                    Blue = 138.5177312231 * Math.Log(Blue) - 305.0447927307;
+                    if (Blue < 0) Blue = 0;
+                    if (Blue > 255) Blue = 255;
+                }
+            }
+        }
 
 
      
