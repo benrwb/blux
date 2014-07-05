@@ -211,11 +211,20 @@ namespace blux
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (slider1 == null || slider2 == null) return;
+
             double red, green, blue;
             ColorTemp(slider1.Value, out red, out green, out blue);
             var rrrr = (float)Math.Round(red / 255, 2);
             var gggg = (float)Math.Round(green / 255, 2);
             var bbbb = (float)Math.Round(blue / 255, 2);
+            
+            // BEGIN brightness
+            rrrr = rrrr * (float)(slider2.Value / 100);
+            gggg = gggg * (float)(slider2.Value / 100);
+            bbbb = bbbb * (float)(slider2.Value / 100);
+            // END brightness
+
             var Temp = new float[,] {
                 /*               OUT     OUT   OUT     OUT        */
                 /*               Red    Green  Blue   Alpha       */
