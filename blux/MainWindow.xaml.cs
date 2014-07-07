@@ -211,7 +211,14 @@ namespace blux
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (slider1 == null || slider2 == null) return;
+            if (slider1 == null || slider2 == null ||chkLink == null) return;
+            if (chkLink.IsChecked == true)
+            {
+                if (sender == slider1)
+                    slider2.Value = (int)(slider1.Value - 1000) / 55;
+                if (sender == slider2)
+                    slider1.Value = (55 * slider2.Value) + 1000;
+            }
 
             double red, green, blue;
             ColorTemp(slider1.Value, out red, out green, out blue);
