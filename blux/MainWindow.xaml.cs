@@ -21,6 +21,8 @@ namespace blux
     /// </summary>
     public partial class MainWindow : Window
     {
+        double _multiplier, _offset; // for linking the sliders together
+
         public MainWindow()
         {
             // Use Task Scheduler to start this program at the desired time of day
@@ -45,7 +47,8 @@ namespace blux
             }
             txtEditor.Text = sb.ToString();
 
-
+            _multiplier = (slider1.Maximum - slider1.Minimum) / (slider2.Maximum - slider2.Minimum);
+            _offset = slider2.Minimum - (slider1.Minimum / _multiplier);
         }
 
 
@@ -215,9 +218,9 @@ namespace blux
             if (chkLink.IsChecked == true)
             {
                 if (sender == slider1)
-                    slider2.Value = (int)(slider1.Value - 1000) / 55;
+                    slider2.Value = Math.Round((slider1.Value / _multiplier) + _offset, 0);
                 if (sender == slider2)
-                    slider1.Value = (55 * slider2.Value) + 1000;
+                    slider1.Value = Math.Round((slider2.Value- _offset) * _multiplier, 0);
             }
 
             double red, green, blue;

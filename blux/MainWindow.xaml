@@ -18,7 +18,7 @@
         <Label FontSize="10" Content="{Binding ElementName=slider1, Path=Value}" HorizontalAlignment="Left" Margin="329,83,0,0" VerticalAlignment="Top" />
         <Label Content="COLOUR TEMP" FontSize="10" HorizontalAlignment="Left" Margin="32,83,0,0" VerticalAlignment="Top"/>
         <Label Content="BRIGHTNESS" FontSize="10" HorizontalAlignment="Left" Margin="34,107,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.635,-5.164"/>
-        <Slider x:Name="slider2" HorizontalAlignment="Left" Margin="114,111,0,0" VerticalAlignment="Top" Width="215" Minimum="10" Maximum="100" ValueChanged="Slider_ValueChanged" SmallChange="1"  IsSnapToTickEnabled="True" Value="6500"/>
+        <Slider x:Name="slider2" HorizontalAlignment="Left" Margin="114,111,0,0" VerticalAlignment="Top" Width="215" Minimum="20" Maximum="100" ValueChanged="Slider_ValueChanged" SmallChange="1"  IsSnapToTickEnabled="True" Value="6500"/>
         <Label FontSize="10" Content="{Binding Value, ElementName=slider2}" HorizontalAlignment="Left" Margin="329,107,0,0" VerticalAlignment="Top" />
         <CheckBox x:Name="chkLink" Content="Link" FontSize="10"  HorizontalAlignment="Left" Margin="366,101,-8.8,0" VerticalAlignment="Top" IsChecked="True"/>
 
