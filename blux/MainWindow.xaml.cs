@@ -1,9 +1,11 @@
-﻿using System;
+﻿// Inspiration from http://arcanesanctum.net/negativescreen/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -29,119 +31,139 @@ namespace blux
 
             InitializeComponent();
 
-            MagInitialize();
+            //MagInitialize();
 
-            var g_Default = new float[,] {
-                /*               OUT     OUT   OUT     OUT        */
-                /*               Red    Green  Blue   Alpha       */
-                /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
-                /* IN Green */ { 0.0f,  1.0f,  0.0f,  0.0f,  0.0f },
-                /* IN Blue  */ { 0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
-                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-            };
-            StringBuilder sb = new StringBuilder();
-            foreach (var row in g_Default)
-            {
-                sb.Append("\t" + row.ToString());
-            }
-            txtEditor.Text = sb.ToString();
 
             _multiplier = (slider1.Maximum - slider1.Minimum) / (slider2.Maximum - slider2.Minimum);
             _offset = slider2.Minimum - (slider1.Minimum / _multiplier);
+
+           
+            t.Elapsed += t_Elapsed;
+            t.Start();
         }
 
+        Timer t = new Timer() { Interval = 500 };
 
+        void t_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Dispatcher.Invoke((Action)delegate
+            {
+                slider1.Value--;
+            });
+        }
+
+      
+        private void chkTimer_Click(object sender, RoutedEventArgs e)
+        {
+            t.Enabled = chkTimer.IsChecked.Value;
+        }
         private void Window_Closed(object sender, EventArgs e)
         {
-            MagUninitialize();
+            //MagUninitialize();
+        }
+
+  
+        //[DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //public static extern bool MagInitialize();
+
+
+        //[DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //public static extern bool MagUninitialize();
+
+
+        //[DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //public static extern bool MagSetFullscreenColorEffect( // Requires Windows 8 or above
+        //    [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] pEffect
+        //);
+
+        // http://www.pinvoke.net/default.aspx/gdi32/setdevicegammaramp.html
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetDC(IntPtr hWnd);
+
+        [DllImport("gdi32.dll")]
+        public static extern bool SetDeviceGammaRamp(IntPtr hDC, ref RAMP lpRamp);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public struct RAMP
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+            public UInt16[] Red;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+            public UInt16[] Green;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+            public UInt16[] Blue;
+        }
+
+        public static void SetGamma(double red, double green, double blue)
+        {
+            if (red < 0.0 || red > 1.0 ||
+                green < 0.0 || green > 1.0 ||
+                blue < 0.0 || blue > 1.0)
+                throw new Exception("Multiplier out of range");
+
+            RAMP ramp = new RAMP();
+            ramp.Red = new ushort[256];
+            ramp.Green = new ushort[256];
+            ramp.Blue = new ushort[256];
+
+            for (int i = 0; i <= 255; i++)
+            {
+                ramp.Red[i] = (ushort)(Convert.ToByte(i * red) << 8);
+                ramp.Green[i] = (ushort)(Convert.ToByte(i * green) << 8);
+                ramp.Blue[i] = (ushort)(Convert.ToByte(i * blue) << 8);
+            }
+            SetDeviceGammaRamp(GetDC(IntPtr.Zero), ref ramp);
         }
 
 
-        [DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool MagInitialize();
 
-
-        [DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool MagUninitialize();
-
-
-        [DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool MagSetFullscreenColorEffect( // Requires Windows 8 or above
-            [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] pEffect
-        );
 
 
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             // Default
-            var Default = new float[,] {
-                /*               OUT     OUT   OUT     OUT        */
-                /*               Red    Green  Blue   Alpha       */
-                /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
-                /* IN Green */ { 0.0f,  1.0f,  0.0f,  0.0f,  0.0f },
-                /* IN Blue  */ { 0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
-                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-            };
-            Set(Default);
+            txtEditor.Text = "1.00	1.00	1.00";
         }
-
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
-            // http://msdn.microsoft.com/en-us/library/windows/desktop/ms533875%28v=vs.85%29.aspx
-            var Red1 = new float[,] {
-                /*               OUT     OUT   OUT     OUT        */
-                /*               Red    Green  Blue   Alpha       */
-                /* IN Red   */ { 1.0f,  0.0f,  0.0f,  0.0f,  0.0f }, // 1.0 = Leave red on full
-                /* IN Green */ { 0.0f,  0.5f,  0.0f,  0.0f,  0.0f }, // 0.5 = Reduce green to half
-                /* IN Blue  */ { 0.0f,  0.0f,  0.5f,  0.0f,  0.0f }, // 0.5 = Reduce blue to half
-                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-            };
-
-            Set(Red1);
-           
+            // Pink
+            txtEditor.Text = "1.00	0.50	0.50";
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            // http://msdn.microsoft.com/en-us/library/windows/desktop/ms533875%28v=vs.85%29.aspx
-            var Red2 = new float[,] {
-                /*               OUT     OUT   OUT     OUT        */
-                /*               Red    Green  Blue   Alpha       */
-                /* IN Red   */ { 0.8f,  0.1f,  0.1f,  0.0f,  0.0f }, 
-                /* IN Green */ { 0.1f,  0.5f,  0.0f,  0.0f,  0.0f }, 
-                /* IN Blue  */ { 0.1f,  0.0f,  0.5f,  0.0f,  0.0f }, 
-                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-            };
-
-            Set(Red2);
+            // Yellow
+            txtEditor.Text = "1.00	0.66	0.33";
         }
 
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click_8(object sender, RoutedEventArgs e)
         {
-            var Grayscale = new float[,] {
-                /*               OUT     OUT   OUT     OUT        */
-                /*               Red    Green  Blue   Alpha       */
-                /* IN Red   */ { 0.3f,  0.3f,  0.3f,  0.0f,  0.0f },
-                /* IN Green */ { 0.6f,  0.6f,  0.6f,  0.0f,  0.0f },
-                /* IN Blue  */ { 0.1f,  0.1f,  0.1f,  0.0f,  0.0f },
-                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-
-            };
-
-            Set(Grayscale);
+            // Neon
+            txtEditor.Text = "1.00	0.66	0.01";
         }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            // Red
+            txtEditor.Text = "1.00	0.00	0.00";
+        }
+
+    
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            // Orange
+            txtEditor.Text = "0.70	0.19	0.11";
+        }
+
+     
+        
+
+      
 
         private void Set(float[,] matrix)
         {
@@ -151,65 +173,20 @@ namespace blux
                     sb.Append("\t" + matrix[a, b]);
             txtEditor.Text = sb.ToString();
 
-            
+
             //MagSetFullscreenColorEffect(matrix);
         }
 
         private void txtEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
             var vals = txtEditor.Text.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            try
-            {
-                if (vals.Length == 25)
-                {
-                    var floats = new float[5, 5];
-                    int c = 0;
-                    for (int a = 0; a < 5; a++)
-                        for (int b = 0; b < 5; b++)
-                            floats[a, b] = Convert.ToSingle(vals[c++]);
+            if (vals.Length != 3) return;
+            SetGamma(
+                Convert.ToDouble(vals[0]),
+                Convert.ToDouble(vals[1]),
+                Convert.ToDouble(vals[2])
+                );
 
-                    txtSummary.Content = string.Format("Red: {0}%, Green: {1}%, Blue: {2}%",
-                        /* Red   */ (floats[0, 0] + floats[1, 0] + floats[2, 0]) * 100,
-                        /* Green */ (floats[0, 1] + floats[1, 1] + floats[2, 1]) * 100,
-                        /* Blue  */ (floats[0, 2] + floats[1, 2] + floats[2, 2]) * 100
-                    );
-
-                    MagSetFullscreenColorEffect(floats);
-                }
-            }
-            catch { }
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            txtEditor.Text = "	1	0	0	0	0	0	0.66	0	0	0	0	0	0.33	0	0	0	0	0	1	0	0	0	0	0	1";
-        }
-
-        
-
-        private void Button_Click_6(object sender, RoutedEventArgs e)
-        {
-            txtEditor.Text = "	0.299	0	0	0	0	0.587	0.0	0	0	0	0.114	0	0.0	0	0	0	0	0	1	0	0	0	0	0	1";
-        }
-
-        private void Button_Click_5(object sender, RoutedEventArgs e)
-        {
-            new Mixer(txtEditor).Show();
-        }
-
-        private void Button_Click_7(object sender, RoutedEventArgs e)
-        {
-            txtEditor.Text = "	0.70	0.04	0.02	0	0	0.30	0.19	0.11	0	0	0	0.14	0.11	0	0	0	0	0	1	0	0	0	0	0	1";
-        }
-
-        private void Button_Click_8(object sender, RoutedEventArgs e)
-        {
-            txtEditor.Text = "	1	0	0	0	0	0	0.66	0	0	0	0	0	0.01	0	0	0	0	0	1	0	0	0	0	0	1";
-        }
-
-        private void Button_Click_9(object sender, RoutedEventArgs e)
-        {
-            txtEditor.Text = "	0.6	0	0	0	0	0.4	0.0	0	0	0	0.0	0	0.0	0	0	0	0	0	1	0	0	0	0	0	1";
         }
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -218,7 +195,7 @@ namespace blux
             if (chkLink.IsChecked == true)
             {
                 if (sender == slider1)
-                    slider2.Value = Math.Round((slider1.Value / _multiplier) + _offset, 0);
+                    slider2.Value = Math.Round((slider1.Value / _multiplier) + _offset, 2);
                 if (sender == slider2)
                     slider1.Value = Math.Round((slider2.Value- _offset) * _multiplier, 0);
             }
@@ -235,16 +212,7 @@ namespace blux
             bbbb = bbbb * (float)(slider2.Value / 100);
             // END brightness
 
-            var Temp = new float[,] {
-                /*               OUT     OUT   OUT     OUT        */
-                /*               Red    Green  Blue   Alpha       */
-                /* IN Red   */ { rrrr,  0.0f,  0.0f,  0.0f,  0.0f },
-                /* IN Green */ { 0.0f,  gggg,  0.0f,  0.0f,  0.0f },
-                /* IN Blue  */ { 0.0f,  0.0f,  bbbb,  0.0f,  0.0f },
-                /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
-                /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
-            };
-            Set(Temp);
+            txtEditor.Text = string.Format("{0:N2}\t{1:N2}\t{2:N2}", rrrr, gggg, bbbb);
         }
 
 
@@ -312,6 +280,11 @@ namespace blux
                 }
             }
         }
+
+     
+     
+
+        
 
 
      
