@@ -204,9 +204,9 @@ namespace blux
 
             double red, green, blue;
             ColorTemp(slider1.Value, out red, out green, out blue);
-            var rrrr = (float)Math.Round(red / 255, 3);
-            var gggg = (float)Math.Round(green / 255, 3);
-            var bbbb = (float)Math.Round(blue / 255, 3);
+            var rrrr = (float)Math.Round(red / 255, 4);
+            var gggg = (float)Math.Round(green / 255, 4);
+            var bbbb = (float)Math.Round(blue / 255, 4);
             
             // BEGIN brightness
             rrrr = rrrr * (float)(slider2.Value / 100);
@@ -214,7 +214,7 @@ namespace blux
             bbbb = bbbb * (float)(slider2.Value / 100);
             // END brightness
 
-            txtEditor.Text = string.Format("{0:N3}\t{1:N3}\t{2:N3}", rrrr, gggg, bbbb);
+            txtEditor.Text = string.Format("{0:N4}\t{1:N4}\t{2:N4}", rrrr, gggg, bbbb);
         }
 
 
