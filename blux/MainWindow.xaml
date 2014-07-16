@@ -20,7 +20,7 @@
         <TextBlock FontSize="10" HorizontalAlignment="Left" Margin="331,131,0,0" VerticalAlignment="Top" >
             <Run Text="{Binding Value, ElementName=slider2}" /><Run Text="%" />
         </TextBlock>
-        <CheckBox x:Name="chkLink" Content="Link"   HorizontalAlignment="Left" Margin="206,152,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <CheckBox x:Name="chkLink" Content="Link"   HorizontalAlignment="Left" Margin="206,152,0,0" VerticalAlignment="Top" />
         <CheckBox x:Name="chkTimer" Content="Timer" HorizontalAlignment="Left" Margin="269,152,0,0" VerticalAlignment="Top" Click="chkTimer_Click" IsChecked="True" />
         <Label Content="R/G/B" HorizontalAlignment="Left" Margin="32,179,0,0" VerticalAlignment="Top" FontSize="10"/>
 
