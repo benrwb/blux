@@ -48,7 +48,7 @@ namespace blux
         {
             Dispatcher.Invoke((Action)delegate
             {
-                slider1.Value--;
+                slider1.Value-=2;
                 if (slider1.Value == 3400)
                     t.Enabled = false; // stop the timer at 3400K
             });
