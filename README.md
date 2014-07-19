@@ -17,6 +17,6 @@ At the moment, the times of day are hard-coded as follows:
 
 Like I said, it's very basic.
 
-The UI also allows for brightness adjustment and there are a number of presets, however these are unavailable if Timer mode is enabled (which is the default).
+The UI also allows for brightness adjustment and there are a number of presets, however these are overridden if Timer mode is enabled (which is the default).
 
 ![Screenshot](blux/blux.png)
