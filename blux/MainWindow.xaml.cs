@@ -48,10 +48,32 @@ namespace blux
         {
             Dispatcher.Invoke((Action)delegate
             {
-                slider1.Value-=2;
-                if (slider1.Value == 3400)
-                    t.Enabled = false; // stop the timer at 3400K
+                slider1.Value = TempFromTime();
             });
+        }
+
+        TimeSpan ninePM = new TimeSpan(21, 0, 0);
+        TimeSpan tenPM = new TimeSpan(22, 0, 0);
+        TimeSpan elevenPM = new TimeSpan(23, 0, 0);
+
+        int TempFromTime() {
+            var now = DateTime.Now.TimeOfDay;
+            if (now < ninePM)
+                return 6500;
+            if (now < tenPM)
+                // === between 9pm and 10pm ===
+                // There are 3600 seconds between 9pm and 10pm
+                // But I only want the colour temperature to change by 3100 (6500-3400)
+                // So I need to multiply the seconds by 0.86
+                return 6500 - (int)((now - ninePM).TotalSeconds * 0.86);
+            if (now < elevenPM)
+                // === between 10pm and 11pm ===
+                // There are 3600 seconds between 10pm and 11pm
+                // But I only want the colour temperature to change by 1500 (3400-1900)
+                // So I need to multiply the seconds by 0.417 
+                return 3400 - (int)((now - tenPM).TotalSeconds * 0.417);
+            else
+                return 1900;
         }
 
       
