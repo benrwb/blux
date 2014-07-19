@@ -9,7 +9,7 @@ First, unlike f.lux, the colour temperature changes are based on the *time of da
 
 Secondly, the rate of colour temperature change is *very gradual*, taking place over a period of two hours. The theory is, the less perceptable the change, the greater likelihood of the user allowing it to take place (not closing the program or choosing "disable for an hour" etc).
 
-At the moment, the time of day are hard-coded as follows:
+At the moment, the times of day are hard-coded as follows:
 
 * Upto 9pm: Default colour temperature of 6500K
 * 9pm - 10pm: Colour temperature will gradually change to 3400K
