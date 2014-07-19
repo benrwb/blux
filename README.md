@@ -11,9 +11,9 @@ Secondly, the rate of colour temperature change is *very gradual*, taking place 
 
 At the moment, the time of day are hard-coded as follows:
 
-Upto 9pm: Default colour temperature of 6500K
-9pm - 10pm: Colour temperature will gradually change to 3400K
-10pm - 11pm: Colour temperature will gradually change to 1900K
+* Upto 9pm: Default colour temperature of 6500K
+* 9pm - 10pm: Colour temperature will gradually change to 3400K
+* 10pm - 11pm: Colour temperature will gradually change to 1900K
 
 Like I said, it's very basic.
 
