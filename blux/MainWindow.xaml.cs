@@ -38,11 +38,27 @@ namespace blux
             _offset = slider2.Minimum - (slider1.Minimum / _multiplier);
 
            
-            t.Elapsed += t_Elapsed;
-            t.Start();
+            m_timer.Elapsed += t_Elapsed;
+            m_timer.Start();
+
+
+            //hide_timer.Elapsed += hide_Elapsed;
+            //hide_timer.Start();
+
         }
 
-        Timer t = new Timer() { Interval = 500 };
+        //Timer hide_timer = new Timer() { Interval = 500 };
+
+        //void hide_Elapsed(object sender, ElapsedEventArgs e)
+        //{
+        //    hide_timer.Enabled = false;
+        //    Dispatcher.Invoke((Action)delegate
+        //   {
+        //       this.Visibility = System.Windows.Visibility.;
+        //   });
+        //}
+
+        Timer m_timer = new Timer() { Interval = 500 };
 
         void t_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -86,7 +102,7 @@ namespace blux
       
         private void chkTimer_Click(object sender, RoutedEventArgs e)
         {
-            t.Enabled = chkTimer.IsChecked.Value;
+            m_timer.Enabled = chkTimer.IsChecked.Value;
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -259,6 +275,12 @@ namespace blux
             // Start with a temperature, in Kelvin, somewhere between 1000 and 40000.  (Other values may work,
             // but I can't make any promises about the quality of the algorithm's estimates above 40000 K.)
             // Note also that the temperature and color variables need to be declared as floating-point.
+
+            if (temp == 6500)
+            {
+                Red = 255; Green = 255; Blue = 255;
+                return;
+            }
 
             var Temperature = temp / 100;
 
