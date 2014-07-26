@@ -31,7 +31,6 @@ namespace blux
 
             InitializeComponent();
 
-            //MagInitialize();
 
 
             _multiplier = (slider1.Maximum - slider1.Minimum) / (slider2.Maximum - slider2.Minimum);
@@ -40,23 +39,15 @@ namespace blux
            
             m_timer.Elapsed += t_Elapsed;
             m_timer.Start();
-
-
-            //hide_timer.Elapsed += hide_Elapsed;
-            //hide_timer.Start();
-
         }
 
-        //Timer hide_timer = new Timer() { Interval = 500 };
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
 
-        //void hide_Elapsed(object sender, ElapsedEventArgs e)
-        //{
-        //    hide_timer.Enabled = false;
-        //    Dispatcher.Invoke((Action)delegate
-        //   {
-        //       this.Visibility = System.Windows.Visibility.;
-        //   });
-        //}
+
 
         Timer m_timer = new Timer() { Interval = 1000 };
 
@@ -79,7 +70,7 @@ namespace blux
 
 
 
-        int seconds_elapsed = -1;
+        int seconds_elapsed = -1; // change to 0 for testing
 
         int TempFromTime()
         {
@@ -107,27 +98,9 @@ namespace blux
         {
             m_timer.Enabled = chkTimer.IsChecked.Value;
         }
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            //MagUninitialize();
-        }
-
+       
   
-        //[DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        //[return: MarshalAs(UnmanagedType.Bool)]
-        //public static extern bool MagInitialize();
 
-
-        //[DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        //[return: MarshalAs(UnmanagedType.Bool)]
-        //public static extern bool MagUninitialize();
-
-
-        //[DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        //[return: MarshalAs(UnmanagedType.Bool)]
-        //public static extern bool MagSetFullscreenColorEffect( // Requires Windows 8 or above
-        //    [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] pEffect
-        //);
 
         // http://www.pinvoke.net/default.aspx/gdi32/setdevicegammaramp.html
         [DllImport("user32.dll")]
@@ -226,10 +199,8 @@ namespace blux
                 for (int b = 0; b < 5; b++)
                     sb.Append("\t" + matrix[a, b]);
             txtEditor.Text = sb.ToString();
-
-
-            //MagSetFullscreenColorEffect(matrix);
         }
+
 
         private void txtEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -350,6 +321,7 @@ namespace blux
             }
         }
 
+     
      
      
 
