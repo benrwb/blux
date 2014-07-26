@@ -161,11 +161,15 @@ namespace blux
 
             for (int i = 0; i <= 255; i++)
             {
-                ramp.Red[i] = (ushort)(Convert.ToByte(i * red) << 8);
-                ramp.Green[i] = (ushort)(Convert.ToByte(i * green) << 8);
-                ramp.Blue[i] = (ushort)(Convert.ToByte(i * blue) << 8);
+                ramp.Red[i] = (ushort)(Convert.ToByte(i * red) << 8); // bitwise shift left
+                ramp.Green[i] = (ushort)(Convert.ToByte(i * green) << 8); // by 8 
+                ramp.Blue[i] = (ushort)(Convert.ToByte(i * blue) << 8); // same as multiplying by 256
+
             }
-            SetDeviceGammaRamp(GetDC(IntPtr.Zero), ref ramp);
+            if (false == SetDeviceGammaRamp(GetDC(IntPtr.Zero), ref ramp))
+                // Can't go below 0.50 (3400K) unless flux is installed
+                // and "Expand range" feature activated (flux.exe /unlockwingamma)
+                throw new Exception("Failed to set gamma ramp");
         }
 
 
@@ -231,11 +235,20 @@ namespace blux
         {
             var vals = txtEditor.Text.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
             if (vals.Length != 3) return;
-            SetGamma(
-                Convert.ToDouble(vals[0]),
-                Convert.ToDouble(vals[1]),
-                Convert.ToDouble(vals[2])
-                );
+
+            try
+            {
+                SetGamma(
+                    Convert.ToDouble(vals[0]),
+                    Convert.ToDouble(vals[1]),
+                    Convert.ToDouble(vals[2])
+                    );
+                lblError.Content = "";
+            }
+            catch (Exception ex)
+            {
+                lblError.Content = ex.Message;
+            }
 
         }
 
