@@ -58,44 +58,47 @@ namespace blux
         //   });
         //}
 
-        Timer m_timer = new Timer() { Interval = 500 };
+        Timer m_timer = new Timer() { Interval = 1000 };
 
         void t_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if (seconds_elapsed == -1 && DateTime.Now.TimeOfDay > new TimeSpan(21, 0, 0))
+                seconds_elapsed = 0; // start the countdown
+
+            if (DateTime.Now.TimeOfDay.Hours == 6) // 6 AM
+                seconds_elapsed = -1; // reset
+
+            if (seconds_elapsed > -1)
+                seconds_elapsed++;
+
             Dispatcher.Invoke((Action)delegate
             {
                 slider1.Value = TempFromTime();
             });
         }
 
-        TimeSpan sixAM = new TimeSpan(6, 0, 0);
-        TimeSpan ninePM = new TimeSpan(21, 0, 0);
-        TimeSpan tenPM = new TimeSpan(22, 0, 0);
-        TimeSpan elevenPM = new TimeSpan(23, 0, 0);
+
+
+        int seconds_elapsed = -1;
 
         int TempFromTime()
         {
-            var now = DateTime.Now.TimeOfDay;
-            if (now < sixAM)
-                // === between midnight and 6am ===
-                return 1900;
-            else if (now < ninePM)
-                // === between 6am and 9pm ===
-                return 6500;
-            else if (now < tenPM)
+            if (seconds_elapsed == -1)
+                return 6500; // nothing to do
+            else if (seconds_elapsed < 3600)
                 // === between 9pm and 10pm ===
                 // There are 3600 seconds between 9pm and 10pm
                 // But I only want the colour temperature to change by 3100 (6500-3400)
                 // So I need to multiply the seconds by 0.86
-                return 6500 - (int)((now - ninePM).TotalSeconds * 0.86);
-            else if (now < elevenPM)
+                return 6500 - (int)((seconds_elapsed) * 0.86);
+            else if (seconds_elapsed < 7200)
                 // === between 10pm and 11pm ===
                 // There are 3600 seconds between 10pm and 11pm
                 // But I only want the colour temperature to change by 1500 (3400-1900)
                 // So I need to multiply the seconds by 0.417 
-                return 3400 - (int)((now - tenPM).TotalSeconds * 0.417);
+                return 3400 - (int)((seconds_elapsed - 3600) * 0.417);
             else
-                // === between 11pm and midnight ===
+                // seconds_elapsed > 7200
                 return 1900;
         }
 
