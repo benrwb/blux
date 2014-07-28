@@ -30,7 +30,7 @@ namespace blux
             // Use Task Scheduler to start this program at the desired time of day
 
             InitializeComponent();
-
+            ShowHideControls();
 
 
             _multiplier = (slider1.Maximum - slider1.Minimum) / (slider2.Maximum - slider2.Minimum);
@@ -50,11 +50,13 @@ namespace blux
 
 
         Timer m_timer = new Timer() { Interval = 1000 };
+        TimeSpan START_TIME = new TimeSpan(21, 0, 0);
 
         void t_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (seconds_elapsed == -1 && DateTime.Now.TimeOfDay > new TimeSpan(21, 0, 0))
-                seconds_elapsed = 0; // start the countdown
+            if (seconds_elapsed == -1 && DateTime.Now.TimeOfDay > START_TIME)
+                //seconds_elapsed = 0; // start the countdown from the beginning
+                seconds_elapsed = (int)(DateTime.Now.TimeOfDay - START_TIME).TotalSeconds; // start the countdown in the right place
 
             if (DateTime.Now.TimeOfDay.Hours == 6) // 6 AM
                 seconds_elapsed = -1; // reset
@@ -71,6 +73,9 @@ namespace blux
 
 
         int seconds_elapsed = -1; // change to 0 for testing
+        // TODO: THIS WON'T WORK IF THE COMPUTER GOES TO SLEEP
+        // (WHEN IT WAKES UP, IT WILL START FROM 0 INSTEAD OF
+        //  RELATIVE TO 9 PM)
 
         int TempFromTime()
         {
@@ -120,25 +125,34 @@ namespace blux
             public UInt16[] Blue;
         }
 
-        public static void SetGamma(double red, double green, double blue)
+        public static void SetGamma(double red, double green, double blue, bool posterise, int posterise_levels)
         {
             if (red < 0.0 || red > 1.0 ||
                 green < 0.0 || green > 1.0 ||
                 blue < 0.0 || blue > 1.0)
                 throw new Exception("Multiplier out of range");
 
-            RAMP ramp = new RAMP();
+            var ramp = new RAMP();
             ramp.Red = new ushort[256];
             ramp.Green = new ushort[256];
             ramp.Blue = new ushort[256];
 
+            double posterise_multiplier = 255 / posterise_levels;
+
             for (int i = 0; i <= 255; i++)
             {
-                ramp.Red[i] = (ushort)(Convert.ToByte(i * red) << 8); // bitwise shift left
-                ramp.Green[i] = (ushort)(Convert.ToByte(i * green) << 8); // by 8 
-                ramp.Blue[i] = (ushort)(Convert.ToByte(i * blue) << 8); // same as multiplying by 256
+                int value = i;
 
+                if (posterise)
+                {
+                    value = (int)(Convert.ToInt32(value / posterise_multiplier) * posterise_multiplier);
+                }
+
+                ramp.Red[i] = (ushort)(Convert.ToByte(value * red) << 8); // bitwise shift left
+                ramp.Green[i] = (ushort)(Convert.ToByte(value * green) << 8); // by 8 
+                ramp.Blue[i] = (ushort)(Convert.ToByte(value * blue) << 8); // same as multiplying by 256
             }
+
             if (false == SetDeviceGammaRamp(GetDC(IntPtr.Zero), ref ramp))
                 // Can't go below 0.50 (3400K) unless flux is installed
                 // and "Expand range" feature activated (flux.exe /unlockwingamma)
@@ -202,6 +216,23 @@ namespace blux
         }
 
 
+        private void sliderPosterise_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            txtEditor_TextChanged(null, null);
+        }
+
+        private void chkPosterise_Changed(object sender, RoutedEventArgs e)
+        {
+            txtEditor_TextChanged(null, null);
+            ShowHideControls();
+        }
+        private void ShowHideControls()
+        {
+            System.Windows.Visibility vis = (chkPosterise.IsChecked == true) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
+            sliderPosterise.Visibility = vis;
+            lblPosterise.Visibility = vis;
+        }
+
         private void txtEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
             var vals = txtEditor.Text.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -212,7 +243,9 @@ namespace blux
                 SetGamma(
                     Convert.ToDouble(vals[0]),
                     Convert.ToDouble(vals[1]),
-                    Convert.ToDouble(vals[2])
+                    Convert.ToDouble(vals[2]),
+                    chkPosterise.IsChecked == true,
+                    (int)sliderPosterise.Value
                     );
                 lblError.Content = "";
             }
@@ -225,7 +258,7 @@ namespace blux
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (slider1 == null || slider2 == null ||chkLink == null) return;
+            if (slider1 == null || slider2 == null ||chkLink == null || chkPosterise == null || sliderPosterise == null) return;
             if (chkLink.IsChecked == true)
             {
                 if (sender == slider1)
@@ -322,6 +355,9 @@ namespace blux
         }
 
      
+
+      
+
      
      
 
