@@ -87,15 +87,16 @@ namespace blux
                 // But I only want the colour temperature to change by 3100 (6500-3400)
                 // So I need to multiply the seconds by 0.86
                 return 6500 - (int)((seconds_elapsed) * 0.86);
-            else if (seconds_elapsed < 7200)
-                // === between 10pm and 11pm ===
-                // There are 3600 seconds between 10pm and 11pm
-                // But I only want the colour temperature to change by 1500 (3400-1900)
-                // So I need to multiply the seconds by 0.417 
-                return 3400 - (int)((seconds_elapsed - 3600) * 0.417);
+            ////////else if (seconds_elapsed < 7200)
+            ////////    // === between 10pm and 11pm ===
+            ////////    // There are 3600 seconds between 10pm and 11pm
+            ////////    // But I only want the colour temperature to change by 1500 (3400-1900)
+            ////////    // So I need to multiply the seconds by 0.417 
+            ////////    return 3400 - (int)((seconds_elapsed - 3600) * 0.417);
             else
-                // seconds_elapsed > 7200
-                return 1900;
+                //////// seconds_elapsed > 7200
+                // seconds_elapsed > 3600
+                return 3400;// 1900;
         }
 
       
