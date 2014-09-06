@@ -25,8 +25,17 @@ namespace blux
     {
         double _multiplier, _offset; // for linking the sliders together
 
+        TimeSpan START_TIME = new TimeSpan(20, 0, 0);
+        TimeSpan END_TIME = new TimeSpan(22, 0, 0);
+        int END_COLOUR_TEMP = 3400;
+        double DURATION; // duration, in seconds
+        double MULTIPLER;
+
         public MainWindow()
         {
+            DURATION = (END_TIME - START_TIME).TotalSeconds;
+            MULTIPLER = (6500 - END_COLOUR_TEMP) / DURATION;
+
             // Use Task Scheduler to start this program at the desired time of day
 
             InitializeComponent();
@@ -50,8 +59,7 @@ namespace blux
 
 
         Timer m_timer = new Timer() { Interval = 1000 };
-        TimeSpan START_TIME = new TimeSpan(21, 0, 0);
-
+        
         void t_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (seconds_elapsed == -1 && DateTime.Now.TimeOfDay > START_TIME)
@@ -81,22 +89,12 @@ namespace blux
         {
             if (seconds_elapsed == -1)
                 return 6500; // nothing to do
-            else if (seconds_elapsed < 3600)
-                // === between 9pm and 10pm ===
-                // There are 3600 seconds between 9pm and 10pm
-                // But I only want the colour temperature to change by 3100 (6500-3400)
-                // So I need to multiply the seconds by 0.86
-                return 6500 - (int)((seconds_elapsed) * 0.86);
-            ////////else if (seconds_elapsed < 7200)
-            ////////    // === between 10pm and 11pm ===
-            ////////    // There are 3600 seconds between 10pm and 11pm
-            ////////    // But I only want the colour temperature to change by 1500 (3400-1900)
-            ////////    // So I need to multiply the seconds by 0.417 
-            ////////    return 3400 - (int)((seconds_elapsed - 3600) * 0.417);
+            else if (seconds_elapsed < DURATION)
+                // So I need to multiply the seconds by MULTIPLIER (colour temp change/number of seconds)
+                return 6500 - (int)((seconds_elapsed) * MULTIPLER);
             else
-                //////// seconds_elapsed > 7200
-                // seconds_elapsed > 3600
-                return 3400;// 1900;
+                // seconds_elapsed > whatever
+                return END_COLOUR_TEMP;
         }
 
       
