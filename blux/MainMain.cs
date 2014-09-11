@@ -217,8 +217,10 @@ namespace blux
 
             // After START_TIME...
             int seconds_elapsed = (int)(now.TimeOfDay - START_TIME).TotalSeconds;
+            if (seconds_elapsed > DURATION) seconds_elapsed = (int)DURATION; // don't allow seconds_elapsed to exceed duration
             // I need to multiply the seconds by MULTIPLIER (colour temp change/number of seconds)
-            return 6500 - (int)(seconds_elapsed * ((6500 - END_COLOUR_TEMP) / DURATION));
+            var MULTIPLIER = (6500 - END_COLOUR_TEMP) / DURATION;
+            return 6500 - (int)(seconds_elapsed * MULTIPLIER);
         }
 
     }
