@@ -25,19 +25,10 @@ namespace blux
     {
         double _multiplier, _offset; // for linking the sliders together
 
-        TimeSpan START_TIME = new TimeSpan(20, 0, 0);
-        TimeSpan END_TIME = new TimeSpan(22, 0, 0);
-        int END_COLOUR_TEMP = 3400;
-        double DURATION; // duration, in seconds
-        double MULTIPLER;
+      
 
         public MainWindow()
         {
-            DURATION = (END_TIME - START_TIME).TotalSeconds;
-            MULTIPLER = (6500 - END_COLOUR_TEMP) / DURATION;
-
-            // Use Task Scheduler to start this program at the desired time of day
-
             InitializeComponent();
             ShowHideControls();
 
@@ -62,41 +53,16 @@ namespace blux
         
         void t_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (seconds_elapsed == -1 && DateTime.Now.TimeOfDay > START_TIME)
-                //seconds_elapsed = 0; // start the countdown from the beginning
-                seconds_elapsed = (int)(DateTime.Now.TimeOfDay - START_TIME).TotalSeconds; // start the countdown in the right place
-
-            if (DateTime.Now.TimeOfDay.Hours == 6) // 6 AM
-                seconds_elapsed = -1; // reset
-
-            if (seconds_elapsed > -1)
-                seconds_elapsed++;
-
             Dispatcher.Invoke((Action)delegate
             {
-                slider1.Value = TempFromTime();
+                slider1.Value = MainMain.TempFromNow();
             });
         }
 
 
 
-        int seconds_elapsed = -1; // change to 0 for testing
-        // TODO: THIS WON'T WORK IF THE COMPUTER GOES TO SLEEP
-        // (WHEN IT WAKES UP, IT WILL START FROM 0 INSTEAD OF
-        //  RELATIVE TO 9 PM)
 
-        int TempFromTime()
-        {
-            if (seconds_elapsed == -1)
-                return 6500; // nothing to do
-            else if (seconds_elapsed < DURATION)
-                // So I need to multiply the seconds by MULTIPLIER (colour temp change/number of seconds)
-                return 6500 - (int)((seconds_elapsed) * MULTIPLER);
-            else
-                // seconds_elapsed > whatever
-                return END_COLOUR_TEMP;
-        }
-
+        
       
         private void chkTimer_Click(object sender, RoutedEventArgs e)
         {
@@ -104,59 +70,6 @@ namespace blux
         }
        
   
-
-
-        // http://www.pinvoke.net/default.aspx/gdi32/setdevicegammaramp.html
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetDC(IntPtr hWnd);
-
-        [DllImport("gdi32.dll")]
-        public static extern bool SetDeviceGammaRamp(IntPtr hDC, ref RAMP lpRamp);
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct RAMP
-        {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
-            public UInt16[] Red;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
-            public UInt16[] Green;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
-            public UInt16[] Blue;
-        }
-
-        public static void SetGamma(double red, double green, double blue, bool posterise, int posterise_levels)
-        {
-            if (red < 0.0 || red > 1.0 ||
-                green < 0.0 || green > 1.0 ||
-                blue < 0.0 || blue > 1.0)
-                throw new Exception("Multiplier out of range");
-
-            var ramp = new RAMP();
-            ramp.Red = new ushort[256];
-            ramp.Green = new ushort[256];
-            ramp.Blue = new ushort[256];
-
-            double posterise_multiplier = 255 / posterise_levels;
-
-            for (int i = 0; i <= 255; i++)
-            {
-                int value = i;
-
-                if (posterise)
-                {
-                    value = (int)(Convert.ToInt32(value / posterise_multiplier) * posterise_multiplier);
-                }
-
-                ramp.Red[i] = (ushort)(Convert.ToByte(value * red) << 8); // bitwise shift left
-                ramp.Green[i] = (ushort)(Convert.ToByte(value * green) << 8); // by 8 
-                ramp.Blue[i] = (ushort)(Convert.ToByte(value * blue) << 8); // same as multiplying by 256
-            }
-
-            if (false == SetDeviceGammaRamp(GetDC(IntPtr.Zero), ref ramp))
-                // Can't go below 0.50 (3400K) unless flux is installed
-                // and "Expand range" feature activated (flux.exe /unlockwingamma)
-                throw new Exception("Failed to set gamma ramp");
-        }
 
 
 
@@ -205,15 +118,7 @@ namespace blux
 
       
 
-        private void Set(float[,] matrix)
-        {
-            StringBuilder sb = new StringBuilder();
-            for (int a = 0; a < 5; a++)
-                for (int b = 0; b < 5; b++)
-                    sb.Append("\t" + matrix[a, b]);
-            txtEditor.Text = sb.ToString();
-        }
-
+       
 
         private void sliderPosterise_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -239,7 +144,7 @@ namespace blux
 
             try
             {
-                SetGamma(
+                MainMain.SetGamma(
                     Convert.ToDouble(vals[0]),
                     Convert.ToDouble(vals[1]),
                     Convert.ToDouble(vals[2]),
@@ -257,21 +162,21 @@ namespace blux
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (slider1 == null || slider2 == null ||chkLink == null || chkPosterise == null || sliderPosterise == null) return;
+            if (slider1 == null || slider2 == null || chkLink == null || chkPosterise == null || sliderPosterise == null) return;
             if (chkLink.IsChecked == true)
             {
                 if (sender == slider1)
                     slider2.Value = Math.Round((slider1.Value / _multiplier) + _offset, 2);
                 if (sender == slider2)
-                    slider1.Value = Math.Round((slider2.Value- _offset) * _multiplier, 0);
+                    slider1.Value = Math.Round((slider2.Value - _offset) * _multiplier, 0);
             }
 
             double red, green, blue;
-            ColorTemp(slider1.Value, out red, out green, out blue);
+            MainMain.ColorTemp(slider1.Value, out red, out green, out blue);
             var rrrr = (float)Math.Round(red / 255, 4);
             var gggg = (float)Math.Round(green / 255, 4);
             var bbbb = (float)Math.Round(blue / 255, 4);
-            
+
             // BEGIN brightness
             rrrr = rrrr * (float)(slider2.Value / 100);
             gggg = gggg * (float)(slider2.Value / 100);
@@ -283,84 +188,7 @@ namespace blux
 
 
 
-
-
-
-
-
-        private void ColorTemp(double temp, out double Red, out double Green, out double Blue)
-        {
-            // http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/ 
-            // Start with a temperature, in Kelvin, somewhere between 1000 and 40000.  (Other values may work,
-            // but I can't make any promises about the quality of the algorithm's estimates above 40000 K.)
-            // Note also that the temperature and color variables need to be declared as floating-point.
-
-            if (temp == 6500)
-            {
-                Red = 255; Green = 255; Blue = 255;
-                return;
-            }
-
-            var Temperature = temp / 100;
-
-            // Calculate Red:
-            if (Temperature <= 66)
-            {
-                Red = 255;
-            }
-            else
-            {
-                Red = Temperature - 60;
-                Red = 329.698727446 * Math.Pow(Red, -0.1332047592);
-                if (Red < 0) Red = 0;
-                if (Red > 255) Red = 255;
-            }
-
-            // Calculate Green:
-            if (Temperature <= 66)
-            {
-                Green = Temperature;
-                Green = 99.4708025861 * Math.Log(Green) - 161.1195681661;
-                if (Green < 0) Green = 0;
-                if (Green > 255) Green = 255;
-            }
-            else
-            {
-                Green = Temperature - 60;
-                Green = 288.1221695283 * Math.Pow(Green, -0.0755148492);
-                if (Green < 0) Green = 0;
-                if (Green > 255) Green = 255;
-            }
-
-            // Calculate Blue:
-            if (Temperature >= 66)
-            {
-                Blue = 255;
-            }
-            else
-            {
-                if (Temperature <= 19)
-                {
-                    Blue = 0;
-                }
-                else
-                {
-                    Blue = Temperature - 10;
-                    Blue = 138.5177312231 * Math.Log(Blue) - 305.0447927307;
-                    if (Blue < 0) Blue = 0;
-                    if (Blue > 255) Blue = 255;
-                }
-            }
-        }
-
-     
-
-      
-
-     
-     
-
-        
+               
 
 
      
