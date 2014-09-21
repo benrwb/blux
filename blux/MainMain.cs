@@ -28,12 +28,12 @@ namespace blux
         {
             if (args.Length > 0 && args[0] == "/doit")
             {
-                int temp = TempFromNow();
-
                 double red, green, blue;
-                MainMain.ColorTemp(temp, out red, out green, out blue);
+                //MainMain.ColorTempToRGB(TempFromNow(), out red, out green, out blue);
+                //SetGamma(red / 255, green / 255, blue / 255, false, 0);
 
-                SetGamma(red / 255, green / 255, blue / 255, false, 0);
+                MainMain.FadeToRed_FromNow(out red, out green, out blue);
+                SetGamma(red, green, blue, false, 0);
             }
             else
             {
@@ -128,7 +128,7 @@ namespace blux
         }
 
 
-        public static void ColorTemp(double temp, out double Red, out double Green, out double Blue)
+        public static void ColorTempToRGB(double temp, out double Red, out double Green, out double Blue)
         {
             // http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/ 
             // Start with a temperature, in Kelvin, somewhere between 1000 and 40000.  (Other values may work,
@@ -195,10 +195,9 @@ namespace blux
 
 
         static TimeSpan START_TIME = new TimeSpan(21, 0, 0);
-        static double DURATION = 7200; // duration in seconds. e.g. 7200 = 2 hours
+        static double DURATION = 3600; // duration in seconds. e.g. 3600 = 1 hour
         static int END_COLOUR_TEMP = 1900;
         static TimeSpan RESET_TIME = new TimeSpan(6, 0, 0); // when to reset back to 6500K
-
 
         public static int TempFromNow()
         {
@@ -219,9 +218,45 @@ namespace blux
             int seconds_elapsed = (int)(now.TimeOfDay - START_TIME).TotalSeconds;
             if (seconds_elapsed > DURATION) seconds_elapsed = (int)DURATION; // don't allow seconds_elapsed to exceed duration
             // I need to multiply the seconds by MULTIPLIER (colour temp change/number of seconds)
-            var MULTIPLIER = (6500 - END_COLOUR_TEMP) / DURATION;
-            return 6500 - (int)(seconds_elapsed * MULTIPLIER);
+            return 6500 - (int)(seconds_elapsed * ((6500 - END_COLOUR_TEMP) / DURATION));
         }
+
+
+
+
+        public static void FadeToRed_FromNow(out double Red, out double Green, out double Blue)
+        {
+            Red = 1.0; Green = 1.0; Blue = 1.0;
+            var now = DateTime.Now;
+           
+            // Different behaviour on weekends
+            bool weekend = false;
+            if (now.DayOfWeek == DayOfWeek.Friday && now.TimeOfDay >= new TimeSpan(17, 0, 0)) weekend = true;
+            if (now.DayOfWeek == DayOfWeek.Saturday) weekend = true;
+            if (now.DayOfWeek == DayOfWeek.Sunday && now.TimeOfDay <= new TimeSpan(16, 0, 0)) weekend = true;
+            double END_BLUE_LEVEL = weekend
+               ? 0.75 // fade to 1.00  0.85  0.75 on weekends
+               : 0.5; // fade to 1.00  0.60  0.50 in the week
+
+
+            // Out of hours
+            double seconds_elapsed;
+            if (now.TimeOfDay < START_TIME) // e.g 6:00 am - 10:00 pm
+                return;
+            if (now.TimeOfDay < RESET_TIME) // e.g. Midnight - 6:00 am 
+                seconds_elapsed = DURATION;
+            else
+            {
+                // After START_TIME...
+                seconds_elapsed = (now.TimeOfDay - START_TIME).TotalSeconds;
+                if (seconds_elapsed > DURATION) seconds_elapsed = DURATION; // don't allow seconds_elapsed to exceed duration
+            }
+
+            // I need to multiply the seconds by MULTIPLIER (colour temp change/number of seconds)
+            Blue = 1 - ((seconds_elapsed / DURATION) * (1.0 - END_BLUE_LEVEL));
+            Green = Math.Min(Blue + 0.1, 1.0); 
+        }
+
 
     }
 }

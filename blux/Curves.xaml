@@ -1,0 +1,13 @@
+﻿<Window x:Class="blux.Curves"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Curves" Height="336" Width="528.8">
+    <Grid>
+            <Canvas  x:Name="canvas1" HorizontalAlignment="Left" Height="255"  Width="255" Margin="45,31,0,0" VerticalAlignment="Top" MouseDown="canvas1_MouseDown" MouseMove="canvas1_MouseMove">
+            <Canvas.Background>
+                <SolidColorBrush Color="White" Opacity="0"/>
+            </Canvas.Background>
+        </Canvas>
+
+    </Grid>
+</Window>

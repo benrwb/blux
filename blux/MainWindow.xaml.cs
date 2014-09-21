@@ -55,7 +55,10 @@ namespace blux
         {
             Dispatcher.Invoke((Action)delegate
             {
-                slider1.Value = MainMain.TempFromNow();
+                //slider1.Value = MainMain.TempFromNow();
+                double red, green, blue;
+                MainMain.FadeToRed_FromNow(out red, out green, out blue);
+                txtEditor.Text = string.Format("{0}\t{1}\t{2}", red, green, blue);
             });
         }
 
@@ -172,7 +175,7 @@ namespace blux
             }
 
             double red, green, blue;
-            MainMain.ColorTemp(slider1.Value, out red, out green, out blue);
+            MainMain.ColorTempToRGB(slider1.Value, out red, out green, out blue);
             var rrrr = (float)Math.Round(red / 255, 4);
             var gggg = (float)Math.Round(green / 255, 4);
             var bbbb = (float)Math.Round(blue / 255, 4);
@@ -184,6 +187,19 @@ namespace blux
             // END brightness
 
             txtEditor.Text = string.Format("{0:N4}\t{1:N4}\t{2:N4}", rrrr, gggg, bbbb);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            new Curves().ShowDialog();
+        }
+
+        private void slider1_Copy_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var value = slider1_Copy.Value;
+            double add = Convert.ToDouble(txtAdd.Text);
+            double multiply = Convert.ToDouble(txtMultiply.Text);
+            txtEditor.Text = string.Format("{0:N4}\t{1:N4}\t{2:N4}", 1, Math.Min((value / 100) + add, 1.0), ((value * multiply) / 100));
         }
 
 
