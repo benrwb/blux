@@ -236,7 +236,7 @@ namespace blux
             if (now.DayOfWeek == DayOfWeek.Sunday && now.TimeOfDay <= new TimeSpan(16, 0, 0)) weekend = true;
             double END_BLUE_LEVEL = weekend
                ? 0.75 // fade to 1.00  0.85  0.75 on weekends
-               : 0.5; // fade to 1.00  0.60  0.50 in the week
+               : 0.4; // fade to 1.00  0.50  0.40 in the week
 
 
             // Out of hours
