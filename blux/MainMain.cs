@@ -241,10 +241,10 @@ namespace blux
 
             // Out of hours
             double seconds_elapsed;
-            if (now.TimeOfDay < START_TIME) // e.g 6:00 am - 10:00 pm
-                return;
             if (now.TimeOfDay < RESET_TIME) // e.g. Midnight - 6:00 am 
                 seconds_elapsed = DURATION;
+            else if (now.TimeOfDay < START_TIME) // e.g 6:00 am - 10:00 pm
+                return;
             else
             {
                 // After START_TIME...
