@@ -26,34 +26,46 @@ namespace blux
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
         public static void Main(string[] args)
         {
+            Process currentProcess = Process.GetCurrentProcess();
+            var runningProcess = (from process in Process.GetProcesses()
+                                  where
+                                    process.Id != currentProcess.Id &&
+                                    process.ProcessName.Equals(currentProcess.ProcessName, StringComparison.Ordinal)
+                                  select process).FirstOrDefault();
+
+
             if (args.Length > 0 && args[0] == "/doit")
             {
-                double red, green, blue;
-                //MainMain.ColorTempToRGB(TempFromNow(), out red, out green, out blue);
-                //SetGamma(red / 255, green / 255, blue / 255, false, 0);
+                if (runningProcess == null)
+                {
+                    // only apply settings if b.lux is NOT already open 
 
-                MainMain.FadeToRed_FromNow(out red, out green, out blue);
-                SetGamma(red, green, blue, false, 0);
+                    double red, green, blue;
+                    //MainMain.ColorTempToRGB(TempFromNow(), out red, out green, out blue);
+                    //SetGamma(red / 255, green / 255, blue / 255, false, 0);
+
+                    MainMain.FadeToRed_FromNow(out red, out green, out blue);
+                    SetGamma(red, green, blue, false, 0);
+                }
             }
             else
             {
-                Process currentProcess = Process.GetCurrentProcess();
-                var runningProcess = (from process in Process.GetProcesses()
-                                      where
-                                        process.Id != currentProcess.Id &&
-                                        process.ProcessName.Equals(currentProcess.ProcessName, StringComparison.Ordinal)
-                                      select process).FirstOrDefault();
+                // no command-line args
+
                 if (runningProcess != null)
                 {
+                    // b.lux is already running, bring to front
                     // Note: Will not work if ShowInTaskbar="False"
                     ShowWindow(runningProcess.MainWindowHandle, SW_SHOW); // restore if minimised
                     SetForegroundWindow(runningProcess.MainWindowHandle); // activate and bring to front
-                    return;
                 }
-
-                blux.App app = new blux.App();
-                app.InitializeComponent();
-                app.Run();
+                else
+                {
+                    // b.lux is not already running, show the main window
+                    blux.App app = new blux.App();
+                    app.InitializeComponent();
+                    app.Run();
+                }
             }
         }
 
