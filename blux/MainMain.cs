@@ -73,11 +73,31 @@ namespace blux
 
 
 
-        
 
 
 
 
+        public static void CustomRamp(int[] transformR, int[] transformG, int[] transformB)
+        {
+            var ramp = new RAMP();
+            ramp.Red = new ushort[256];
+            ramp.Green = new ushort[256];
+            ramp.Blue = new ushort[256];
+
+
+            for (int i = 0; i <= 255; i++)
+            {
+                int value = i;
+                ramp.Red[i] = (ushort)(transformR[i] << 8); // bitwise shift left
+                ramp.Green[i] = (ushort)(transformG[i] << 8); // by 8 
+                ramp.Blue[i] = (ushort)(transformB[i] << 8); // same as multiplying by 256
+            }
+
+            if (false == SetDeviceGammaRamp(GetDC(IntPtr.Zero), ref ramp))
+                // Can't go below 0.50 (3400K) unless flux is installed
+                // and "Expand range" feature activated (flux.exe /unlockwingamma)
+                throw new Exception("Failed to set gamma ramp");
+        }
 
 
 

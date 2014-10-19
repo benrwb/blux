@@ -202,6 +202,24 @@ namespace blux
             txtEditor.Text = string.Format("{0:N4}\t{1:N4}\t{2:N4}", 1, Math.Min((value / 100) + add, 1.0), ((value * multiply) / 100));
         }
 
+        private void btnInvertRed_Click(object sender, RoutedEventArgs e)
+        {
+            int[] greenblue = new int[256];
+            int[] red = new int[256];
+            for (int i = 0; i < 256; i++)
+            {
+                greenblue[i] = i;
+                red[i] = 256 - i;
+            }
+            for (int i = 0; i < 16; i++)
+                red[i] = i;
+            for (int i = 240; i < 256; i++)
+                red[i] = i;
+
+                MainMain.CustomRamp(red, greenblue, greenblue);
+
+        }
+
 
 
                
