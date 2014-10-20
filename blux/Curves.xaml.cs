@@ -53,29 +53,32 @@ namespace blux
 
         private void image1_MouseMove(object sender, MouseEventArgs e)
         {
-            int x = (int)e.GetPosition((IInputElement)sender).X;
-            int y = (int)(256 - e.GetPosition((IInputElement)sender).Y);
-            this.Title = string.Format("{0},{1}", x, y);
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                int x = (int)e.GetPosition((IInputElement)sender).X;
+                int y = (int)(256 - e.GetPosition((IInputElement)sender).Y);
+                this.Title = string.Format("{0},{1}", x, y);
 
-            var array = 
-                sender == image1 ? transformR : 
-                sender == image2 ? transformG : 
-                transformB;
+                var array =
+                    sender == image1 ? transformR :
+                    sender == image2 ? transformG :
+                    transformB;
 
-            var bmp =
-                sender == image1 ? wbmapR :
-                sender == image2 ? wbmapG :
-                wbmapB;
+                var bmp =
+                    sender == image1 ? wbmapR :
+                    sender == image2 ? wbmapG :
+                    wbmapB;
 
-            var color =
-                sender == image1 ? Colors.Red :
-                sender == image2 ? Colors.Green :
-                Colors.Blue;
+                var color =
+                    sender == image1 ? Colors.Red :
+                    sender == image2 ? Colors.Green :
+                    Colors.Blue;
 
-            array[x] = y;
-            bmp.update(array, color);
+                array[x] = y;
+                bmp.update(array, color);
 
-            MainMain.CustomRamp(transformR, transformG, transformB);
+                MainMain.CustomRamp(transformR, transformG, transformB);
+            }
         }
 
 

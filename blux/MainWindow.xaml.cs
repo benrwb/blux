@@ -211,10 +211,10 @@ namespace blux
                 greenblue[i] = i;
                 red[i] = 256 - i;
             }
-            for (int i = 0; i < 16; i++)
-                red[i] = i;
-            for (int i = 240; i < 256; i++)
-                red[i] = i;
+            //for (int i = 0; i < 16; i++)
+            //    red[i] = i;
+            //for (int i = 240; i < 256; i++)
+            //    red[i] = i;
 
                 MainMain.CustomRamp(red, greenblue, greenblue);
 
