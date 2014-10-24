@@ -209,7 +209,7 @@ namespace blux
             for (int i = 0; i < 256; i++)
             {
                 greenblue[i] = i;
-                red[i] = 256 - i;
+                red[i] = 255 - i;
             }
             //for (int i = 0; i < 16; i++)
             //    red[i] = i;

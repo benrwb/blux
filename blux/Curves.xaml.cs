@@ -56,7 +56,7 @@ namespace blux
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 int x = (int)e.GetPosition((IInputElement)sender).X;
-                int y = (int)(256 - e.GetPosition((IInputElement)sender).Y);
+                int y = (int)(255 - e.GetPosition((IInputElement)sender).Y);
                 this.Title = string.Format("{0},{1}", x, y);
 
                 var array =
@@ -79,6 +79,51 @@ namespace blux
 
                 MainMain.CustomRamp(transformR, transformG, transformB);
             }
+        }
+
+        private void slider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            for (int i = 0; i < 256; i++)
+                foreach (var transform in new[] {  transformR, transformG, transformB })
+                transform[i] = Clamp(i + 
+                    (((i / 2) % 2 == 0) ? (int)slider1.Value : 0 - (int)slider1.Value));
+
+            wbmapR.update(transformR, Colors.Red);
+            wbmapG.update(transformG, Colors.Green);
+            wbmapB.update(transformB, Colors.Blue);
+
+            MainMain.CustomRamp(transformR, transformG, transformB);
+        }
+
+        private int Clamp(int val)
+        {
+            if (val < 0) return 0;
+            if (val > 255) return 255;
+            return val;
+        }
+
+        private void slider2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Random r = new Random();
+            int sli = (int)slider2.Value;
+
+            for (int i = 0; i < 256; i++)
+                foreach (var transform in new[] { transformR, transformG, transformB })
+                    transform[i] = Clamp(i + (0 - (sli / 2)) + r.Next(sli));
+            //int horiz = 5;
+            //for (int i = 0; i < (256-horiz); i+=horiz)
+            //    foreach (var transform in new[] { transformR, transformG, transformB })
+            //    {
+            //        var rnd = r.Next(sli);
+            //        for (int h = 0; h < horiz;h++)
+            //            transform[i+h] = Clamp(i + (0 - (sli / 2)) + rnd);
+            //    }
+
+            wbmapR.update(transformR, Colors.Red);
+            wbmapG.update(transformG, Colors.Green);
+            wbmapB.update(transformB, Colors.Blue);
+
+            MainMain.CustomRamp(transformR, transformG, transformB);
         }
 
 
@@ -138,7 +183,7 @@ public static class bitmapextensions
             {
                 for (int y = 0; y < 256; y++)
                 {
-                    Color c = transformArray[x] == (256 - y) ? Colors.Black : backgroundColor;
+                    Color c = transformArray[x] == (255 - y) ? Colors.Black : backgroundColor;
                     byte* pbuff = (byte*)buff.ToPointer();
                     int loc = y * Stride + x * 4;
                     pbuff[loc] = c.B;
