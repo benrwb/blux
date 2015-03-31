@@ -36,6 +36,7 @@
         <TextBox x:Name="txtAdd" HorizontalAlignment="Left" Height="23" Margin="148,312,0,0" TextWrapping="Wrap" Text="0.1" VerticalAlignment="Top" Width="51"/>
         <Label Content="Multiply" FontSize="10" HorizontalAlignment="Left" Margin="213,311,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtMultiply" HorizontalAlignment="Left" Height="23" Margin="264,312,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="51"/>
-        <Button x:Name="btnInvertRed" Content="Invert Red" HorizontalAlignment="Left" Margin="305,25,0,0" VerticalAlignment="Top" Width="75" Click="btnInvertRed_Click"/>
+        <Button x:Name="btnMixer" Content="Mixer" HorizontalAlignment="Left" Margin="305,25,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.485,0.729" Click="btnMixer_Click"/>
+        <Button Content="Mag" HorizontalAlignment="Left" Margin="305,88,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_2"/>
     </Grid>
 </Window>

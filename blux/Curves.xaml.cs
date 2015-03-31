@@ -126,6 +126,21 @@ namespace blux
             MainMain.CustomRamp(transformR, transformG, transformB);
         }
 
+        private void sliderPosterise_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double posterise_multiplier = 255 / sliderPosterise.Value;
+
+            for (int i = 0; i < 256; i++)
+                foreach (var transform in new[] { transformR, transformG, transformB })
+                    transform[i] = (int)(Convert.ToInt32(i / posterise_multiplier) * posterise_multiplier);
+
+            wbmapR.update(transformR, Colors.Red);
+            wbmapG.update(transformG, Colors.Green);
+            wbmapB.update(transformB, Colors.Blue);
+
+            MainMain.CustomRamp(transformR, transformG, transformB);
+        }
+
 
        
         }

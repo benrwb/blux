@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,14 +21,38 @@ namespace blux
     /// </summary>
     public partial class Mixer : Window
     {
-        TextBox m_textbox;
 
-        public Mixer(TextBox tb)
+        public Mixer()
         {
-            m_textbox = tb;
             InitializeComponent();
+
+            MagInitialize();
+
             refresh();
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MagUninitialize();
+        }
+
+        [DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool MagInitialize();
+
+        [DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool MagUninitialize();
+
+        [DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool MagSetFullscreenColorEffect( // Requires Windows 8 or above
+            [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] pEffect
+        );
+
+
+
+
 
         private void myThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
@@ -54,37 +79,33 @@ namespace blux
             var bleft = Canvas.GetLeft(myThumbB);
             var btop = Canvas.GetTop(myThumbB);
 
-            double val0 = ((255 - rleft) * (255 - rtop)) / 65025; // amount of red going to the red channel
-            double val1 = ((255 - gleft) * (255 - gtop)) / 65025; // amount of red going to the green channel
-            double val2 = ((255 - bleft) * (255 - btop)) / 65025; // amount of red going to the blue channel
+            float val0 = (float)(((255 - rleft) * (255 - rtop)) / 65025); // amount of red going to the red channel
+            float val1 = (float)(((255 - gleft) * (255 - gtop)) / 65025); // amount of red going to the green channel
+            float val2 = (float)(((255 - bleft) * (255 - btop)) / 65025); // amount of red going to the blue channel
 
-            double val3 = ((rleft) * (255 - rtop)) / 65025; // amount of green going to the red channel
-            double val4 = ((gleft) * (255 - gtop)) / 65025; // amount of green going to the green channel
-            double val5 = ((bleft) * (255 - btop)) / 65025; // amount of green going to the blue channel
-
-            double val6 = ((255 - rleft) * (rtop)) / 65025; // amount of blue going to the red channel
-            double val7 = ((255 - gleft) * (gtop)) / 65025; // amount of blue going to the green channel
-            double val8 = ((255 - bleft) * (btop)) / 65025; // amount of blue going to the blue channel
-
-            m_textbox.Text = string.Format(
-                "\t{0}\t{1}\t{2}\t0\t0" + 
-                "\t{3}\t{4}\t{5}\t0\t0" + 
-                "\t{6}\t{7}\t{8}\t0\t0" +
-                "\t0\t0\t0\t1\t0" + 
-                "\t0\t0\t0\t0\t1",
-                Math.Round(val0, 2),
-                Math.Round(val1, 2),
-                Math.Round(val2, 2),
-                Math.Round(val3, 2),
-                Math.Round(val4, 2),
-                Math.Round(val5, 2),
-                Math.Round(val6, 2),
-                Math.Round(val7, 2),
-                Math.Round(val8, 2)
-            );
+            float val3 = (float)(((rleft) * (255 - rtop)) / 65025); // amount of green going to the red channel
+            float val4 = (float)(((gleft) * (255 - gtop)) / 65025); // amount of green going to the green channel
+            float val5 = (float)(((bleft) * (255 - btop)) / 65025); // amount of green going to the blue channel
+  
+            float val6 = (float)(((255 - rleft) * (rtop)) / 65025); // amount of blue going to the red channel
+            float val7 = (float)(((255 - gleft) * (gtop)) / 65025); // amount of blue going to the green channel
+            float val8 = (float)(((255 - bleft) * (btop)) / 65025); // amount of blue going to the blue channel
 
 
+            var matrix = new float[,] {
+            /*               OUT    OUT    OUT    OUT        */
+            /*               Red    Green  Blue   Alpha      */
+            /* IN Red   */ { val0,  val1,  val2,  0.0f,  0.0f },
+            /* IN Green */ { val3,  val4,  val5,  0.0f,  0.0f },
+            /* IN Blue  */ { val6,  val7,  val8,  0.0f,  0.0f },
+            /* IN Alpha */ { 0.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+            /*          */ { 0.0f,  0.0f,  0.0f,  0.0f,  1.0f }
+            };
+            
+            MagSetFullscreenColorEffect(matrix);
         }
+
+     
 
 
 

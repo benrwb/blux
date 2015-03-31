@@ -220,6 +220,18 @@ namespace blux
 
         }
 
+        private void btnMixer_Click(object sender, RoutedEventArgs e)
+        {
+            Mixer m = new Mixer();
+            m.ShowDialog();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Mag m = new Mag();
+            m.ShowDialog();
+        }
+
 
 
                
