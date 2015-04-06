@@ -4,7 +4,7 @@
         Title="Mag" Height="248.8" Width="467.2" Closing="Window_Closing">
     <Grid>
         <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="120" Margin="43,67,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="278" TextChanged="textBox1_TextChanged" />
-        <Slider x:Name="slider1" HorizontalAlignment="Left" Margin="43,26,0,0" VerticalAlignment="Top" Width="177" ValueChanged="slider1_ValueChanged" Maximum="10.0" TickPlacement="BottomRight" SmallChange="1" IsSnapToTickEnabled="True" />
+        <Slider x:Name="slider1" HorizontalAlignment="Left" Margin="43,26,0,0" VerticalAlignment="Top" Width="177" ValueChanged="slider1_ValueChanged" Maximum="10.0" TickPlacement="BottomRight" SmallChange="1" IsSnapToTickEnabled="True" Value="10" />
         <CheckBox x:Name="chkMono" Content="Mono" HorizontalAlignment="Left" Margin="267,26,0,0" VerticalAlignment="Top" Checked="chkMono_Checked" Unchecked="chkMono_Checked" />
         <CheckBox x:Name="chkInvert" Content="Invert" HorizontalAlignment="Left" Margin="380,26,0,0" VerticalAlignment="Top" Checked="chkInvert_Checked" Unchecked="chkInvert_Checked"/>
 
