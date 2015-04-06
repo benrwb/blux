@@ -106,6 +106,8 @@ namespace blux
 
         private void slider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (chkMono == null) return; // UI not ready
+
             var valu = (float)slider1.Value / 10;
 
             //var matrix = new float[,] {
