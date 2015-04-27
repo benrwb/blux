@@ -34,22 +34,22 @@ namespace blux
                                   select process).FirstOrDefault();
 
 
-            if (args.Length > 0 && args[0] == "/doit")
-            {
-                if (runningProcess == null)
-                {
-                    // only apply settings if b.lux is NOT already open 
+            //if (args.Length > 0 && args[0] == "/doit")
+            //{
+            //    if (runningProcess == null)
+            //    {
+            //        // only apply settings if b.lux is NOT already open 
 
-                    double red, green, blue;
-                    //MainMain.ColorTempToRGB(TempFromNow(), out red, out green, out blue);
-                    //SetGamma(red / 255, green / 255, blue / 255, false, 0);
+            //        double red, green, blue;
+            //        //MainMain.ColorTempToRGB(TempFromNow(), out red, out green, out blue);
+            //        //SetGamma(red / 255, green / 255, blue / 255, false, 0);
 
-                    MainMain.FadeToRed_FromNow(out red, out green, out blue);
-                    SetGamma(red, green, blue, false, 0);
-                }
-            }
-            else
-            {
+            //        MainMain.FadeToRed_FromNow(out red, out green, out blue);
+            //        SetGamma(red, green, blue);
+            //    }
+            //}
+            //else
+            //{
                 // no command-line args
 
                 if (runningProcess != null)
@@ -66,7 +66,7 @@ namespace blux
                     app.InitializeComponent();
                     app.Run();
                 }
-            }
+            //}
         }
 
 
@@ -123,7 +123,7 @@ namespace blux
             public UInt16[] Blue;
         }
 
-        public static void SetGamma(double red, double green, double blue, bool posterise, int posterise_levels)
+        public static void SetGamma(double red, double green, double blue)
         {
             if (red < 0.0 || red > 1.0 ||
                 green < 0.0 || green > 1.0 ||
@@ -135,18 +135,10 @@ namespace blux
             ramp.Green = new ushort[256];
             ramp.Blue = new ushort[256];
 
-            double posterise_multiplier = posterise
-                ? 255 / posterise_levels
-                : 1;
 
             for (int i = 0; i <= 255; i++)
             {
                 int value = i;
-
-                if (posterise)
-                {
-                    value = (int)(Convert.ToInt32(value / posterise_multiplier) * posterise_multiplier);
-                }
 
                 ramp.Red[i] = (ushort)(Convert.ToByte(value * red) << 8); // bitwise shift left
                 ramp.Green[i] = (ushort)(Convert.ToByte(value * green) << 8); // by 8 
@@ -226,67 +218,127 @@ namespace blux
         }
 
 
-        static TimeSpan START_TIME = new TimeSpan(21, 0, 0);
-        static double DURATION = 3600; // duration in seconds. e.g. 3600 = 1 hour
-        static int END_COLOUR_TEMP = 1900;
-        static TimeSpan RESET_TIME = new TimeSpan(6, 0, 0); // when to reset back to 6500K
+        //static TimeSpan START_TIME = new TimeSpan(21, 0, 0);
+        //static double DURATION = 3600; // duration in seconds. e.g. 3600 = 1 hour
+        //static int END_COLOUR_TEMP = 1900;
+        //static TimeSpan RESET_TIME = new TimeSpan(6, 0, 0); // when to reset back to 6500K
 
-        public static int TempFromNow()
+        //public static int TempFromNow()
+        //{
+        //    var now = DateTime.Now;
+
+        //    // Deactivate on weekends
+        //    if (now.DayOfWeek == DayOfWeek.Friday && now.TimeOfDay >= new TimeSpan(17, 0, 0)) return 6500;
+        //    if (now.DayOfWeek == DayOfWeek.Saturday) return 6500;
+        //    if (now.DayOfWeek == DayOfWeek.Sunday && now.TimeOfDay <= new TimeSpan(16, 0, 0)) return 6500;
+
+        //    // Out of hours
+        //    if (now.TimeOfDay < RESET_TIME) // e.g. Midnight - 6:00 am 
+        //        return END_COLOUR_TEMP;
+        //    if (now.TimeOfDay < START_TIME) // e.g 6:00 am - 10:00 pm
+        //        return 6500;
+
+        //    // After START_TIME...
+        //    int seconds_elapsed = (int)(now.TimeOfDay - START_TIME).TotalSeconds;
+        //    if (seconds_elapsed > DURATION) seconds_elapsed = (int)DURATION; // don't allow seconds_elapsed to exceed duration
+        //    // I need to multiply the seconds by MULTIPLIER (colour temp change/number of seconds)
+        //    return 6500 - (int)(seconds_elapsed * ((6500 - END_COLOUR_TEMP) / DURATION));
+        //}
+
+
+
+
+        //public static void FadeToRed_FromNow(out double Red, out double Green, out double Blue)
+        //{
+        //    Red = 1.0; Green = 1.0; Blue = 1.0;
+        //    var now = DateTime.Now;
+           
+        //    // Different behaviour on weekends
+        //    bool weekend = false;
+        //    if (now.DayOfWeek == DayOfWeek.Friday && now.TimeOfDay >= new TimeSpan(17, 0, 0)) weekend = true;
+        //    if (now.DayOfWeek == DayOfWeek.Saturday) weekend = true;
+        //    if (now.DayOfWeek == DayOfWeek.Sunday && now.TimeOfDay <= new TimeSpan(16, 0, 0)) weekend = true;
+        //    double END_BLUE_LEVEL = weekend
+        //       ? 0.7  // fade to 1.00  0.80  0.70 on weekends
+        //       : 0.4; // fade to 1.00  0.50  0.40 in the week
+
+
+        //    // Out of hours
+        //    double seconds_elapsed;
+        //    if (now.TimeOfDay < RESET_TIME) // e.g. Midnight - 6:00 am 
+        //        seconds_elapsed = DURATION;
+        //    else if (now.TimeOfDay < START_TIME) // e.g 6:00 am - 10:00 pm
+        //        return;
+        //    else
+        //    {
+        //        // After START_TIME...
+        //        seconds_elapsed = (now.TimeOfDay - START_TIME).TotalSeconds;
+        //        if (seconds_elapsed > DURATION) seconds_elapsed = DURATION; // don't allow seconds_elapsed to exceed duration
+        //    }
+
+        //    // I need to multiply the seconds by MULTIPLIER (colour temp change/number of seconds)
+        //    Blue = 1 - ((seconds_elapsed / DURATION) * (1.0 - END_BLUE_LEVEL));
+        //    Green = Math.Min(Blue + 0.1, 1.0); 
+        //}
+
+
+
+
+        public class TimeValue
         {
-            var now = DateTime.Now;
-
-            // Deactivate on weekends
-            if (now.DayOfWeek == DayOfWeek.Friday && now.TimeOfDay >= new TimeSpan(17, 0, 0)) return 6500;
-            if (now.DayOfWeek == DayOfWeek.Saturday) return 6500;
-            if (now.DayOfWeek == DayOfWeek.Sunday && now.TimeOfDay <= new TimeSpan(16, 0, 0)) return 6500;
-
-            // Out of hours
-            if (now.TimeOfDay < RESET_TIME) // e.g. Midnight - 6:00 am 
-                return END_COLOUR_TEMP;
-            if (now.TimeOfDay < START_TIME) // e.g 6:00 am - 10:00 pm
-                return 6500;
-
-            // After START_TIME...
-            int seconds_elapsed = (int)(now.TimeOfDay - START_TIME).TotalSeconds;
-            if (seconds_elapsed > DURATION) seconds_elapsed = (int)DURATION; // don't allow seconds_elapsed to exceed duration
-            // I need to multiply the seconds by MULTIPLIER (colour temp change/number of seconds)
-            return 6500 - (int)(seconds_elapsed * ((6500 - END_COLOUR_TEMP) / DURATION));
+            public double Offset { get; set; }
+            public int Temp { get; set; }
         }
 
-
-
-
-        public static void FadeToRed_FromNow(out double Red, out double Green, out double Blue)
+        public static Dictionary<int,int> BuildTimeOfDayLookup(string tsv)
         {
-            Red = 1.0; Green = 1.0; Blue = 1.0;
-            var now = DateTime.Now;
-           
-            // Different behaviour on weekends
-            bool weekend = false;
-            if (now.DayOfWeek == DayOfWeek.Friday && now.TimeOfDay >= new TimeSpan(17, 0, 0)) weekend = true;
-            if (now.DayOfWeek == DayOfWeek.Saturday) weekend = true;
-            if (now.DayOfWeek == DayOfWeek.Sunday && now.TimeOfDay <= new TimeSpan(16, 0, 0)) weekend = true;
-            double END_BLUE_LEVEL = weekend
-               ? 0.7  // fade to 1.00  0.80  0.70 on weekends
-               : 0.4; // fade to 1.00  0.50  0.40 in the week
+            var data = tsv
+             .Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+             .Select(z => z.Split('\t'))
+             .Select(z => new TimeValue()
+             {
+                 Offset = TimeSpan.Parse(z[0]).TotalSeconds,
+                 Temp = Convert.ToInt32(z[1])
+             }).ToList();
 
 
-            // Out of hours
-            double seconds_elapsed;
-            if (now.TimeOfDay < RESET_TIME) // e.g. Midnight - 6:00 am 
-                seconds_elapsed = DURATION;
-            else if (now.TimeOfDay < START_TIME) // e.g 6:00 am - 10:00 pm
-                return;
-            else
+            data.Add(new TimeValue() // ensure it wraps around to midnight correctly
             {
-                // After START_TIME...
-                seconds_elapsed = (now.TimeOfDay - START_TIME).TotalSeconds;
-                if (seconds_elapsed > DURATION) seconds_elapsed = DURATION; // don't allow seconds_elapsed to exceed duration
+                Offset = TimeSpan.Parse("23:59:59").TotalSeconds + 1, // +1 to include 23:59:59 itself
+                Temp = data[0].Temp
+            });
+
+
+            var lookup = new Dictionary<int, int>();
+            for (int i = 0; i < data.Count - 1; i++)
+            {
+                double temp = data[i].Temp; // starting temp for this time period
+                double seconds = data[i + 1].Offset - data[i].Offset; // total number of seconds
+                double increment = (data[i + 1].Temp - data[i].Temp) / seconds; // how much to increment temp each second
+
+                for (var t = data[i].Offset; t < data[i + 1].Offset; t++)
+                {
+                    // for each second between the two times,
+                    // calculate the temp at that point
+
+                    temp += increment;
+
+                    lookup.Add((int)t, (int)temp);
+                }
+
             }
 
-            // I need to multiply the seconds by MULTIPLIER (colour temp change/number of seconds)
-            Blue = 1 - ((seconds_elapsed / DURATION) * (1.0 - END_BLUE_LEVEL));
-            Green = Math.Min(Blue + 0.1, 1.0); 
+            //var sb = new StringBuilder();
+            //foreach (var item in lookup)
+            //{
+            //    sb.AppendFormat("{0}\t{1}\n", TimeSpan.FromSeconds(item.Key).ToString(), item.Value);
+            //}
+            //tb1.Text = sb.ToString();
+
+
+            //this.Title = "Current: " + lookup[(int)DateTime.Now.TimeOfDay.TotalSeconds];
+
+            return lookup;
         }
 
 

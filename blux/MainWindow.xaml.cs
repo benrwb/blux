@@ -24,13 +24,22 @@ namespace blux
     public partial class MainWindow : Window
     {
         double _multiplier, _offset; // for linking the sliders together
+        Dictionary<int, int> _todLookup; // time of day lookup
 
-      
+
+        string _initialTimes = @"00:00	1900
+05:00	1900
+06:00	6500
+18:00	6500
+19:00	5500
+20:00	4400
+21:00	3400
+22:00	2500
+23:00	1900";
 
         public MainWindow()
         {
             InitializeComponent();
-            ShowHideControls();
 
 
             _multiplier = (slider1.Maximum - slider1.Minimum) / (slider2.Maximum - slider2.Minimum);
@@ -39,6 +48,10 @@ namespace blux
            
             m_timer.Elapsed += t_Elapsed;
             m_timer.Start();
+
+         
+            tb1.Text = _initialTimes;
+            _todLookup = MainMain.BuildTimeOfDayLookup(tb1.Text);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -48,6 +61,9 @@ namespace blux
         }
 
 
+       
+
+
 
         Timer m_timer = new Timer() { Interval = 1000 };
         
@@ -55,10 +71,11 @@ namespace blux
         {
             Dispatcher.Invoke((Action)delegate
             {
-                //slider1.Value = MainMain.TempFromNow();
-                double red, green, blue;
-                MainMain.FadeToRed_FromNow(out red, out green, out blue);
-                txtEditor.Text = string.Format("{0}\t{1}\t{2}", red, green, blue);
+                slider1.Value = _todLookup[(int)DateTime.Now.TimeOfDay.TotalSeconds];
+                ////slider1.Value = MainMain.TempFromNow();
+                //double red, green, blue;
+                //MainMain.FadeToRed_FromNow(out red, out green, out blue);
+                //txtEditor.Text = string.Format("{0}\t{1}\t{2}", red, green, blue);
             });
         }
 
@@ -78,67 +95,11 @@ namespace blux
 
 
 
-
-        private void Button_Click_4(object sender, RoutedEventArgs e)
-        {
-            // Default
-            txtEditor.Text = "1.00	1.00	1.00";
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            // Pink
-            txtEditor.Text = "1.00	0.50	0.50";
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            // Yellow
-            txtEditor.Text = "1.00	0.66	0.33";
-        }
-
-        private void Button_Click_8(object sender, RoutedEventArgs e)
-        {
-            // Neon
-            txtEditor.Text = "1.00	0.66	0.01";
-        }
-
-        private void Button_Click_6(object sender, RoutedEventArgs e)
-        {
-            // Red
-            txtEditor.Text = "1.00	0.00	0.00";
-        }
-
-    
-        private void Button_Click_7(object sender, RoutedEventArgs e)
-        {
-            // Orange
-            txtEditor.Text = "0.70	0.19	0.11";
-        }
-
-     
-        
-
       
 
        
 
-        private void sliderPosterise_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            txtEditor_TextChanged(null, null);
-        }
-
-        private void chkPosterise_Changed(object sender, RoutedEventArgs e)
-        {
-            txtEditor_TextChanged(null, null);
-            ShowHideControls();
-        }
-        private void ShowHideControls()
-        {
-            System.Windows.Visibility vis = (chkPosterise.IsChecked == true) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
-            sliderPosterise.Visibility = vis;
-            lblPosterise.Visibility = vis;
-        }
+       
 
         private void txtEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -150,9 +111,7 @@ namespace blux
                 MainMain.SetGamma(
                     Convert.ToDouble(vals[0]),
                     Convert.ToDouble(vals[1]),
-                    Convert.ToDouble(vals[2]),
-                    chkPosterise.IsChecked == true,
-                    (int)sliderPosterise.Value
+                    Convert.ToDouble(vals[2])
                     );
                 lblError.Content = "";
             }
@@ -165,7 +124,7 @@ namespace blux
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (slider1 == null || slider2 == null || chkLink == null || chkPosterise == null || sliderPosterise == null) return;
+            if (slider1 == null || slider2 == null || chkLink == null) return;
             if (chkLink.IsChecked == true)
             {
                 if (sender == slider1)
@@ -189,51 +148,18 @@ namespace blux
             txtEditor.Text = string.Format("{0:N4}\t{1:N4}\t{2:N4}", rrrr, gggg, bbbb);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void btnReload_Click(object sender, RoutedEventArgs e)
         {
-            new Curves().ShowDialog();
+            _todLookup = MainMain.BuildTimeOfDayLookup(tb1.Text);
         }
 
-        private void slider1_Copy_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            var value = slider1_Copy.Value;
-            double add = Convert.ToDouble(txtAdd.Text);
-            double multiply = Convert.ToDouble(txtMultiply.Text);
-            txtEditor.Text = string.Format("{0:N4}\t{1:N4}\t{2:N4}", 1, Math.Min((value / 100) + add, 1.0), ((value * multiply) / 100));
+            tb1.Text = _initialTimes;
+            _todLookup = MainMain.BuildTimeOfDayLookup(_initialTimes);
         }
 
-        private void btnInvertRed_Click(object sender, RoutedEventArgs e)
-        {
-            int[] greenblue = new int[256];
-            int[] red = new int[256];
-            for (int i = 0; i < 256; i++)
-            {
-                greenblue[i] = i;
-                red[i] = 255 - i;
-            }
-            //for (int i = 0; i < 16; i++)
-            //    red[i] = i;
-            //for (int i = 240; i < 256; i++)
-            //    red[i] = i;
-
-                MainMain.CustomRamp(red, greenblue, greenblue);
-
-        }
-
-        private void btnMixer_Click(object sender, RoutedEventArgs e)
-        {
-            Mixer m = new Mixer();
-            m.ShowDialog();
-        }
-
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            Mag m = new Mag();
-            m.ShowDialog();
-        }
-
-
-
+        
                
 
 
