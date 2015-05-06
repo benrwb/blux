@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace blux
 {
@@ -46,7 +47,7 @@ namespace blux
             _offset = slider2.Minimum - (slider1.Minimum / _multiplier);
 
            
-            m_timer.Elapsed += t_Elapsed;
+            m_timer.Tick += t_Elapsed;
             m_timer.Start();
 
          
@@ -61,22 +62,23 @@ namespace blux
         }
 
 
-       
 
 
 
-        Timer m_timer = new Timer() { Interval = 1000 };
-        
-        void t_Elapsed(object sender, ElapsedEventArgs e)
+
+        DispatcherTimer m_timer = new DispatcherTimer() { Interval = System.TimeSpan.FromSeconds(1) };
+        // Originally I used a 'Timer' which runs on a separate thread
+        // and I updated the UI with Dispatcher.Invoke((Action)delegate {...
+        // However this leaked GDI objects
+        // so I have switched to DispatcherTimer which runs on the UI thread.
+
+        void t_Elapsed(object sender, EventArgs e)
         {
-            Dispatcher.Invoke((Action)delegate
-            {
-                slider1.Value = _todLookup[(int)DateTime.Now.TimeOfDay.TotalSeconds];
-                ////slider1.Value = MainMain.TempFromNow();
-                //double red, green, blue;
-                //MainMain.FadeToRed_FromNow(out red, out green, out blue);
-                //txtEditor.Text = string.Format("{0}\t{1}\t{2}", red, green, blue);
-            });
+            slider1.Value = _todLookup[(int)DateTime.Now.TimeOfDay.TotalSeconds];
+            ////slider1.Value = MainMain.TempFromNow();
+            //double red, green, blue;
+            //MainMain.FadeToRed_FromNow(out red, out green, out blue);
+            //txtEditor.Text = string.Format("{0}\t{1}\t{2}", red, green, blue);
         }
 
 
@@ -86,7 +88,7 @@ namespace blux
       
         private void chkTimer_Click(object sender, RoutedEventArgs e)
         {
-            m_timer.Enabled = chkTimer.IsChecked.Value;
+            m_timer.IsEnabled = chkTimer.IsChecked.Value;
         }
        
   
