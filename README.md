@@ -1,4 +1,4 @@
-blux
+Rblux
 ====
 
 b.lux is a very basic Windows program which changes the colour temperature of the display.
@@ -20,3 +20,5 @@ This can be changed by editing the textbox and clicking 'Program'. The default p
 The UI also allows for brightness adjustment. This can be useful on desktop PCs, which unlike laptops don't have hotkeys to control brightness.
 
 ![Screenshot](blux/blux.png)
+
+Note that by default, Windows doesn't allow colour temperatures lower than 3400K. Lower colour temperatures can be unlocked by installing f.lux and choosing the "Expand range" feature (or by running (flux.exe /unlockwingamma)
