@@ -1,5 +1,5 @@
-blux
-====
+b.lux
+=====
 
 b.lux is a very basic Windows program which changes the colour temperature of the display.
 
