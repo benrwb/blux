@@ -55,22 +55,9 @@ namespace blux
             _todLookup = MainMain.BuildTimeOfDayLookup(tb1.Text);
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
-        }
-
-
-
-
-
-
+       
         DispatcherTimer m_timer = new DispatcherTimer() { Interval = System.TimeSpan.FromSeconds(1) };
-        // Originally I used a 'Timer' which runs on a separate thread
-        // and I updated the UI with Dispatcher.Invoke((Action)delegate {...
-        // However this leaked GDI objects
-        // so I have switched to DispatcherTimer which runs on the UI thread.
+
 
         void t_Elapsed(object sender, EventArgs e)
         {
@@ -81,18 +68,18 @@ namespace blux
             //txtEditor.Text = string.Format("{0}\t{1}\t{2}", red, green, blue);
         }
 
-
-
-
-        
-      
+              
         private void chkTimer_Click(object sender, RoutedEventArgs e)
         {
             m_timer.IsEnabled = chkTimer.IsChecked.Value;
         }
-       
-  
 
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
 
 
 

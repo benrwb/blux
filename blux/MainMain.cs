@@ -93,7 +93,11 @@ namespace blux
                 ramp.Blue[i] = (ushort)(transformB[i] << 8); // same as multiplying by 256
             }
 
-            if (false == SetDeviceGammaRamp(GetDC(IntPtr.Zero), ref ramp))
+            var screenDC = GetDC(IntPtr.Zero);
+            var result = SetDeviceGammaRamp(screenDC, ref ramp);
+            ReleaseDC(IntPtr.Zero, screenDC); // required otherwise will leak GDI objects
+
+            if (result == false)
                 // Can't go below 0.50 (3400K) unless flux is installed
                 // and "Expand range" feature activated (flux.exe /unlockwingamma)
                 throw new Exception("Failed to set gamma ramp");
@@ -108,6 +112,9 @@ namespace blux
         // http://www.pinvoke.net/default.aspx/gdi32/setdevicegammaramp.html
         [DllImport("user32.dll")]
         public static extern IntPtr GetDC(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
         [DllImport("gdi32.dll")]
         public static extern bool SetDeviceGammaRamp(IntPtr hDC, ref RAMP lpRamp);
@@ -145,7 +152,11 @@ namespace blux
                 ramp.Blue[i] = (ushort)(Convert.ToByte(value * blue) << 8); // same as multiplying by 256
             }
 
-            if (false == SetDeviceGammaRamp(GetDC(IntPtr.Zero), ref ramp))
+            var screenDC = GetDC(IntPtr.Zero);
+            var result = SetDeviceGammaRamp(screenDC, ref ramp);
+            ReleaseDC(IntPtr.Zero, screenDC); // required otherwise will leak GDI objects
+
+            if (result == false)
                 // Can't go below 0.50 (3400K) unless flux is installed
                 // and "Expand range" feature activated (flux.exe /unlockwingamma)
                 throw new Exception("Failed to set gamma ramp");
