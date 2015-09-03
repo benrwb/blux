@@ -95,6 +95,22 @@ namespace blux
             MainMain.CustomRamp(transformR, transformG, transformB);
         }
 
+        private void silder3_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int step = (int)slider3.Value;
+
+            for (int i = 0; i < 256; i++)
+                foreach (var transform in new[] { transformR, transformG, transformB })
+                    transform[i] = Clamp(i +
+                        (step - (i % step) - (i % step)));
+
+            wbmapR.update(transformR, Colors.Red);
+            wbmapG.update(transformG, Colors.Green);
+            wbmapB.update(transformB, Colors.Blue);
+
+            MainMain.CustomRamp(transformR, transformG, transformB);
+        }
+
         private int Clamp(int val)
         {
             if (val < 0) return 0;
@@ -140,6 +156,8 @@ namespace blux
 
             MainMain.CustomRamp(transformR, transformG, transformB);
         }
+
+      
 
 
        

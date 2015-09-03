@@ -162,8 +162,81 @@ namespace blux
                 throw new Exception("Failed to set gamma ramp");
         }
 
+        public static void Method3(double intensity, out double Red, out double Green, out double Blue)
+        {
+            // "intensity" ranges from 0.0 (nighttime) to 1.0 (daytime)
 
-        public static void ColorTempToRGB(double temp, out double Red, out double Green, out double Blue)
+            // Green light not as bad as blue:
+            // http://www.health.harvard.edu/staying-healthy/blue-light-has-a-dark-side
+
+            // RED
+            Red = 1.0;
+
+            // GREEN
+            // http://tutorial.math.lamar.edu/Classes/CalcI/LogFcns.aspx
+            // We want to use the part of the common logarithm (Log10) chart 
+            // between x = 0.2 and x = 1.
+            // This will return a value between -0.7 and 0.
+            // We add 1 to push it into the range 0.3 to 1.
+            Green = Math.Log10(0.2 + (intensity * 0.8)) + 1;
+
+            
+            // BLUE
+            // Blue scales linearly, but the range is 
+            // "squashed" so that it hits zero when the slider
+            // is down to about 15%.
+            Blue = (intensity * (1 / 0.85)) - 0.15;
+
+
+
+            // Clamp values and convert from 0-1 to 0-255
+            if (Green > 1) Green = 1; else if (Green < 0) Green = 0;
+            if (Blue > 1) Blue = 1; else if (Blue < 0) Blue = 0;
+            Red *= 255;
+            Green *= 255;
+            Blue *= 255;
+        }
+
+        public static void ColorTempToRGB2(double temp, out double Red, out double Green, out double Blue)
+        {
+            // Green light not as bad as blue:
+            // http://www.health.harvard.edu/staying-healthy/blue-light-has-a-dark-side
+
+            //var reduction = 1 - ((temp - 1000) / 5500); // 0 = no reduction, 1 = full reduction
+
+            if (temp == 6500)
+            {
+                Red = 255; Green = 255; Blue = 255;
+                return;
+            }
+
+            var Temperature = temp / 100;
+
+            // Calculate Red:
+            Red = 255;
+
+            // Calculate Green:
+            Green = Temperature;
+            Green = 99.5 * Math.Log(Green) - 161;
+            if (Green < 0) Green = 0;
+            if (Green > 255) Green = 255;
+
+            // Calculate Blue:
+            if (Temperature <= 19)
+            {
+                Blue = 0;
+            }
+            else
+            {
+                Blue = Temperature - 10;
+                //Blue = 138.5177312231 * Math.Log(Blue) - 305.0447927307;
+                Blue = 128 * Math.Log(Blue) - 305;
+                if (Blue < 0) Blue = 0;
+                if (Blue > 255) Blue = 255;
+            }
+        }
+
+        public static void ColorTempToRGB1(double temp, out double Red, out double Green, out double Blue)
         {
             // http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/ 
             // Start with a temperature, in Kelvin, somewhere between 1000 and 40000.  (Other values may work,

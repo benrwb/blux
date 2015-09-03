@@ -154,6 +154,8 @@ namespace blux
 
  
 
+           
+
             var matrix = new float[,] {
             /*               OUT                     OUT                          OUT                          OUT        */
             /*               Red                     Green                        Blue                         Alpha      */

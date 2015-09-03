@@ -123,7 +123,13 @@ namespace blux
             }
 
             double red, green, blue;
-            MainMain.ColorTempToRGB(slider1.Value, out red, out green, out blue);
+            if (Method1.IsChecked)
+                MainMain.ColorTempToRGB1(slider1.Value, out red, out green, out blue);
+            else if (Method2.IsChecked)
+                MainMain.ColorTempToRGB2(slider1.Value, out red, out green, out blue);
+            else // method 3
+                MainMain.Method3((slider1.Value - slider1.Minimum) / (slider1.Maximum - slider1.Minimum), out red, out green, out blue);
+
             var rrrr = (float)Math.Round(red / 255, 4);
             var gggg = (float)Math.Round(green / 255, 4);
             var bbbb = (float)Math.Round(blue / 255, 4);
@@ -134,7 +140,7 @@ namespace blux
             bbbb = bbbb * (float)(slider2.Value / 100);
             // END brightness
 
-            txtEditor.Text = string.Format("{0:N4}\t{1:N4}\t{2:N4}", rrrr, gggg, bbbb);
+            txtEditor.Text = string.Format("{0:N2}\t{1:N2}\t{2:N2}", rrrr, gggg, bbbb);
         }
 
         private void btnReload_Click(object sender, RoutedEventArgs e)
@@ -148,9 +154,44 @@ namespace blux
             _todLookup = MainMain.BuildTimeOfDayLookup(_initialTimes);
         }
 
-        
-               
+        private void Curves_Click(object sender, RoutedEventArgs e)
+        {
+            (new Curves()).ShowDialog();
+        }
 
+        private void Mag_Click(object sender, RoutedEventArgs e)
+        {
+            (new Mag()).ShowDialog();
+        }
+
+        private void Mixer_Click(object sender, RoutedEventArgs e)
+        {
+            (new Mixer()).ShowDialog();
+        }
+
+        private void Check(int number)
+        {
+            // there must be an easier way than this...
+            Method1.IsChecked = number == 1;
+            Method2.IsChecked = number == 2;
+            Method3.IsChecked = number == 3;
+            Slider_ValueChanged(null, null); // apply changes
+        }
+
+        private void Method1_Click(object sender, RoutedEventArgs e)
+        {
+            Check(1);
+        }
+
+        private void Method2_Click(object sender, RoutedEventArgs e)
+        {
+            Check(2);
+        }
+
+        private void Method3_Click(object sender, RoutedEventArgs e)
+        {
+            Check(3);
+        }
 
      
     }
