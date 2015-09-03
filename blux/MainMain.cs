@@ -185,7 +185,7 @@ namespace blux
             // Blue scales linearly, but the range is 
             // "squashed" so that it hits zero when the slider
             // is down to about 15%.
-            Blue = (intensity * (1 / 0.85)) - 0.15;
+            Blue = (intensity * 1.2) - 0.15;
 
 
 
