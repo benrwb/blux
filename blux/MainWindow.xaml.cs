@@ -123,12 +123,16 @@ namespace blux
             }
 
             double red, green, blue;
+            double intensity = (slider1.Value - slider1.Minimum) / (slider1.Maximum - slider1.Minimum);
+            lblIntensity.Content = intensity;
             if (Method1.IsChecked)
                 MainMain.ColorTempToRGB1(slider1.Value, out red, out green, out blue);
             else if (Method2.IsChecked)
                 MainMain.ColorTempToRGB2(slider1.Value, out red, out green, out blue);
-            else // method 3
-                MainMain.Method3((slider1.Value - slider1.Minimum) / (slider1.Maximum - slider1.Minimum), out red, out green, out blue);
+            else if (Method3.IsChecked)
+                MainMain.Method3(intensity, out red, out green, out blue);
+            else // method 4
+                MainMain.Method4(intensity, out red, out green, out blue);
 
             var rrrr = (float)Math.Round(red / 255, 4);
             var gggg = (float)Math.Round(green / 255, 4);
@@ -175,6 +179,7 @@ namespace blux
             Method1.IsChecked = number == 1;
             Method2.IsChecked = number == 2;
             Method3.IsChecked = number == 3;
+            Method4.IsChecked = number == 4;
             Slider_ValueChanged(null, null); // apply changes
         }
 
@@ -193,6 +198,9 @@ namespace blux
             Check(3);
         }
 
-     
+        private void Method4_Click(object sender, RoutedEventArgs e)
+        {
+            Check(4);
+        }
     }
 }

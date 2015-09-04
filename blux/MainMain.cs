@@ -61,6 +61,7 @@ namespace blux
                 }
                 else
                 {
+                    Method4_BuildLookups();
                     // b.lux is not already running, show the main window
                     blux.App app = new blux.App();
                     app.InitializeComponent();
@@ -188,6 +189,48 @@ namespace blux
             Blue = (intensity * 1.2) - 0.15;
 
 
+            // Clamp values and convert from 0-1 to 0-255
+            if (Green > 1) Green = 1; else if (Green < 0) Green = 0;
+            if (Blue > 1) Blue = 1; else if (Blue < 0) Blue = 0;
+            Red *= 255;
+            Green *= 255;
+            Blue *= 255;
+        }
+        class TempMapItem
+        {
+            public double In;
+            public double Out; 
+        }
+        static List<TempMapItem> _GreenLookup, _BlueLookup;
+
+        public static void Method4_BuildLookups()
+        {
+            _GreenLookup = new List<TempMapItem>();
+            _GreenLookup.Add(new TempMapItem() { In = 0.0, Out = 0.27 });
+            _GreenLookup.Add(new TempMapItem() { In = 0.1, Out = 0.44 });
+            _GreenLookup.Add(new TempMapItem() { In = 0.2, Out = 0.56 });
+            _GreenLookup.Add(new TempMapItem() { In = 0.3, Out = 0.65 });
+            _GreenLookup.Add(new TempMapItem() { In = 0.4, Out = 0.72 });
+            _GreenLookup.Add(new TempMapItem() { In = 0.5, Out = 0.78 });
+            _GreenLookup.Add(new TempMapItem() { In = 0.6, Out = 0.84 });
+            _GreenLookup.Add(new TempMapItem() { In = 1.0, Out = 1.00 });
+
+            _BlueLookup = new List<TempMapItem>();
+            _BlueLookup.Add(new TempMapItem() { In = 0.0, Out = 0.0 });
+            _BlueLookup.Add(new TempMapItem() { In = 0.2, Out = 0.01 });
+            _BlueLookup.Add(new TempMapItem() { In = 0.3, Out = 0.21 });
+            _BlueLookup.Add(new TempMapItem() { In = 0.4, Out = 0.36 });
+            _BlueLookup.Add(new TempMapItem() { In = 0.5, Out = 0.47 });
+            _BlueLookup.Add(new TempMapItem() { In = 0.8, Out = 0.7 });
+            _BlueLookup.Add(new TempMapItem() { In = 1.0, Out = 1.0 });
+        }
+
+        public static void Method4(double intensity, out double Red, out double Green, out double Blue)
+        {
+            // "intensity" ranges from 0.0 (nighttime) to 1.0 (daytime)
+            Red = 1.0;
+            Green = PerformLookup(_GreenLookup, intensity);
+            Blue = PerformLookup(_BlueLookup, intensity);
 
             // Clamp values and convert from 0-1 to 0-255
             if (Green > 1) Green = 1; else if (Green < 0) Green = 0;
@@ -197,12 +240,25 @@ namespace blux
             Blue *= 255;
         }
 
+        private static double PerformLookup(List<TempMapItem> table, double intensity)
+        {
+            var exactMatch = table.SingleOrDefault(z => z.In == intensity);
+            if (exactMatch != null)
+                return exactMatch.Out;
+            else
+            {
+                var upper = table.Where(z => z.In > intensity).OrderBy(z => z.In).First();
+                var lower = table.Where(z => z.In < intensity).OrderByDescending(z => z.In).First();
+                var posInRange = (intensity - lower.In) / (upper.In - lower.In);
+                return (posInRange * (upper.Out - lower.Out)) + lower.Out;
+            }
+        }
+
+     
         public static void ColorTempToRGB2(double temp, out double Red, out double Green, out double Blue)
         {
             // Green light not as bad as blue:
             // http://www.health.harvard.edu/staying-healthy/blue-light-has-a-dark-side
-
-            //var reduction = 1 - ((temp - 1000) / 5500); // 0 = no reduction, 1 = full reduction
 
             if (temp == 6500)
             {
