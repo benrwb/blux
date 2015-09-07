@@ -196,6 +196,10 @@ namespace blux
             Green *= 255;
             Blue *= 255;
         }
+
+
+
+
         class TempMapItem
         {
             public double In;
@@ -213,6 +217,7 @@ namespace blux
             _GreenLookup.Add(new TempMapItem() { In = 0.4, Out = 0.72 });
             _GreenLookup.Add(new TempMapItem() { In = 0.5, Out = 0.78 });
             _GreenLookup.Add(new TempMapItem() { In = 0.6, Out = 0.84 });
+            _GreenLookup.Add(new TempMapItem() { In = 0.9, Out = 0.98 });
             _GreenLookup.Add(new TempMapItem() { In = 1.0, Out = 1.00 });
 
             _BlueLookup = new List<TempMapItem>();
@@ -220,8 +225,8 @@ namespace blux
             _BlueLookup.Add(new TempMapItem() { In = 0.2, Out = 0.01 });
             _BlueLookup.Add(new TempMapItem() { In = 0.3, Out = 0.21 });
             _BlueLookup.Add(new TempMapItem() { In = 0.4, Out = 0.36 });
-            _BlueLookup.Add(new TempMapItem() { In = 0.5, Out = 0.47 });
-            _BlueLookup.Add(new TempMapItem() { In = 0.8, Out = 0.7 });
+            _BlueLookup.Add(new TempMapItem() { In = 0.5, Out = 0.46 });
+            _BlueLookup.Add(new TempMapItem() { In = 0.8, Out = 0.77 });
             _BlueLookup.Add(new TempMapItem() { In = 1.0, Out = 1.0 });
         }
 
@@ -254,7 +259,29 @@ namespace blux
             }
         }
 
-     
+
+
+
+
+        public static void Method5(double intensity, out double Red, out double Green, out double Blue)
+        {
+            // "intensity" ranges from 0.0 (nighttime) to 1.0 (daytime)
+
+            // Calculated using polynomial trendlines (order=2) in Excel
+            Red = 1.0;
+            Green = (-0.6054 * Math.Pow(intensity, 2)) + (1.2938 * intensity) + 0.3002;
+            Blue = (-0.6764 * Math.Pow(intensity, 2)) + (2.0034 * intensity) - 0.3445;
+
+
+            // Clamp values and convert from 0-1 to 0-255
+            if (Green > 1) Green = 1; else if (Green < 0) Green = 0;
+            if (Blue > 1) Blue = 1; else if (Blue < 0) Blue = 0;
+            Red *= 255;
+            Green *= 255;
+            Blue *= 255;
+        }
+
+
         public static void ColorTempToRGB2(double temp, out double Red, out double Green, out double Blue)
         {
             // Green light not as bad as blue:

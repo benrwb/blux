@@ -124,15 +124,17 @@ namespace blux
 
             double red, green, blue;
             double intensity = (slider1.Value - slider1.Minimum) / (slider1.Maximum - slider1.Minimum);
-            lblIntensity.Content = intensity;
+            lblIntensity.Content = intensity.ToString("N2");
             if (Method1.IsChecked)
                 MainMain.ColorTempToRGB1(slider1.Value, out red, out green, out blue);
             else if (Method2.IsChecked)
                 MainMain.ColorTempToRGB2(slider1.Value, out red, out green, out blue);
             else if (Method3.IsChecked)
                 MainMain.Method3(intensity, out red, out green, out blue);
-            else // method 4
+            else if (Method4.IsChecked)
                 MainMain.Method4(intensity, out red, out green, out blue);
+            else // method 
+                MainMain.Method5(intensity, out red, out green, out blue);
 
             var rrrr = (float)Math.Round(red / 255, 4);
             var gggg = (float)Math.Round(green / 255, 4);
@@ -144,7 +146,7 @@ namespace blux
             bbbb = bbbb * (float)(slider2.Value / 100);
             // END brightness
 
-            txtEditor.Text = string.Format("{0:N2}\t{1:N2}\t{2:N2}", rrrr, gggg, bbbb);
+            txtEditor.Text = string.Format("{0:N3}\t{1:N3}\t{2:N3}", rrrr, gggg, bbbb);
         }
 
         private void btnReload_Click(object sender, RoutedEventArgs e)
@@ -180,6 +182,7 @@ namespace blux
             Method2.IsChecked = number == 2;
             Method3.IsChecked = number == 3;
             Method4.IsChecked = number == 4;
+            Method5.IsChecked = number == 5;
             Slider_ValueChanged(null, null); // apply changes
         }
 
@@ -201,6 +204,11 @@ namespace blux
         private void Method4_Click(object sender, RoutedEventArgs e)
         {
             Check(4);
+        }
+
+        private void Method5_Click(object sender, RoutedEventArgs e)
+        {
+            Check(5);
         }
     }
 }

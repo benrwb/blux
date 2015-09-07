@@ -34,9 +34,10 @@
                 <MenuItem Header="Method 1" HorizontalAlignment="Left" Width="140" IsCheckable="True" Name="Method1" Click="Method1_Click" />
                 <MenuItem Header="Method 2" HorizontalAlignment="Left" Width="140" IsCheckable="True" Name="Method2" Click="Method2_Click" />
                 <MenuItem Header="Method 3" HorizontalAlignment="Left" Width="140" IsCheckable="True" Name="Method3" Click="Method3_Click" />
-                <MenuItem Header="Method 4" HorizontalAlignment="Left" Width="140" IsCheckable="True" Name="Method4" Click="Method4_Click" IsChecked="True" />
+                <MenuItem Header="Method 4" HorizontalAlignment="Left" Width="140" IsCheckable="True" Name="Method4" Click="Method4_Click" />
+                <MenuItem Header="Method 4" HorizontalAlignment="Left" Width="140" IsCheckable="True" Name="Method5" Click="Method5_Click" IsChecked="True" />
             </MenuItem>
         </Menu>
-        <Label x:Name="lblIntensity" Content="Label" HorizontalAlignment="Left" Margin="507,25,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblIntensity" Content="Intensity"  HorizontalAlignment="Left" Margin="340,25,0,0"  VerticalAlignment="Top"/>
     </Grid>
 </Window>
