@@ -267,10 +267,11 @@ namespace blux
         {
             // "intensity" ranges from 0.0 (nighttime) to 1.0 (daytime)
 
+
             // Calculated using polynomial trendlines (order=2) in Excel
             Red = 1.0;
-            Green = (-0.6054 * Math.Pow(intensity, 2)) + (1.2938 * intensity) + 0.3002;
-            Blue = (-0.6764 * Math.Pow(intensity, 2)) + (2.0034 * intensity) - 0.3445;
+            Green = (-0.6409 * Math.Pow(intensity, 2)) + (1.3624 * intensity) + 0.278; // changed from 0.2778 to 0.278 to ensure 1.0 --> 1.000
+            Blue = (-0.6 * Math.Pow(intensity, 2)) + (1.9439 * intensity) - 0.3349;
 
 
             // Clamp values and convert from 0-1 to 0-255

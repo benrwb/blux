@@ -1,6 +1,7 @@
 ﻿// Inspiration from http://arcanesanctum.net/negativescreen/
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,7 +15,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace blux
@@ -28,11 +28,11 @@ namespace blux
         Dictionary<int, int> _todLookup; // time of day lookup
 
 
-        string _initialTimes = @"00:00	1900
+       static string _defaultSettings = @"00:00	1900
 05:00	1900
 06:00	6500
-18:00	6500
-19:00	5500
+18:30	6500
+19:00	5000
 20:00	4400
 21:00	3400
 22:00	2500
@@ -51,8 +51,9 @@ namespace blux
             m_timer.Start();
 
          
-            tb1.Text = _initialTimes;
+            tb1.Text = LoadSettings();
             _todLookup = MainMain.BuildTimeOfDayLookup(tb1.Text);
+            btnReload.IsEnabled = false;
         }
 
        
@@ -149,15 +150,25 @@ namespace blux
             txtEditor.Text = string.Format("{0:N3}\t{1:N3}\t{2:N3}", rrrr, gggg, bbbb);
         }
 
+        private void tb1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (btnReload != null)
+            btnReload.IsEnabled = true;
+        }
         private void btnReload_Click(object sender, RoutedEventArgs e)
         {
+            SaveSettings(tb1.Text);
             _todLookup = MainMain.BuildTimeOfDayLookup(tb1.Text);
+            btnReload.IsEnabled = false;
         }
+
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            tb1.Text = _initialTimes;
-            _todLookup = MainMain.BuildTimeOfDayLookup(_initialTimes);
+            tb1.Text = _defaultSettings;
+            SaveSettings(tb1.Text);
+            _todLookup = MainMain.BuildTimeOfDayLookup(tb1.Text);
+            btnReload.IsEnabled = false;
         }
 
         private void Curves_Click(object sender, RoutedEventArgs e)
@@ -210,5 +221,45 @@ namespace blux
         {
             Check(5);
         }
+
+
+
+
+
+        private static string GetSettingsFileName()
+        {
+            string folderName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "blux");
+            if (!Directory.Exists(folderName))
+                Directory.CreateDirectory(folderName);
+            return Path.Combine(folderName, "program.txt"); ;
+        }
+
+        private static string LoadSettings()
+        {
+            var fileName = GetSettingsFileName();
+            if (File.Exists(fileName))
+            {
+                // Load previously-saved settings
+                using (var sr = new StreamReader(fileName))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+            else
+            {
+                // Start with default settings
+                return _defaultSettings;
+            }
+        }
+
+        private static void SaveSettings(string program)
+        {
+            using (StreamWriter sw = new StreamWriter(GetSettingsFileName()))
+            {
+                sw.Write(program);
+            }
+        }
+
+      
     }
 }
