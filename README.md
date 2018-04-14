@@ -21,4 +21,14 @@ The UI also allows for brightness adjustment. This can be useful on desktop PCs,
 
 ![Screenshot](blux/blux.png)
 
-Note that by default, Windows doesn't allow colour temperatures lower than 3400K. Lower colour temperatures can be unlocked by installing f.lux and choosing the "Expand range" feature (or by running `flux.exe /unlockwingamma`)
+Note that by default, Windows doesn't allow colour temperatures lower than 3400K. Lower colour temperatures can be unlocked by making the following change to the registry:
+
+    Windows Registry Editor Version 5.00
+
+    [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ICM]
+    "GdiIcmGammaRange"=dword:00000100
+
+(See http://jonls.dk/2010/09/windows-gamma-adjustments/)
+
+Alternatively, if f.lux is installed, then the same thing can be accomplished by using the "Expand range" feature (or by running `flux.exe /unlockwingamma`)
+
