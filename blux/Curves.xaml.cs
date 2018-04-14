@@ -30,11 +30,11 @@ namespace blux
         {
             InitializeComponent();
 
-            
+
             foreach (var array in new[] { transformR, transformG, transformB })
-            for (int i = 0; i < 256; i++)
-                array[i] = i;
-       
+                for (int i = 0; i < 256; i++)
+                    array[i] = i;
+
             wbmapR.update(transformR, Colors.Red);
             wbmapG.update(transformR, Colors.Green);
             wbmapB.update(transformR, Colors.Blue);
@@ -48,8 +48,8 @@ namespace blux
         }
 
 
-       
-        
+
+
 
         private void image1_MouseMove(object sender, MouseEventArgs e)
         {
@@ -84,9 +84,9 @@ namespace blux
         private void slider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             for (int i = 0; i < 256; i++)
-                foreach (var transform in new[] {  transformR, transformG, transformB })
-                transform[i] = Clamp(i + 
-                    (((i / 2) % 2 == 0) ? (int)slider1.Value : 0 - (int)slider1.Value));
+                foreach (var transform in new[] { transformR, transformG, transformB })
+                    transform[i] = Clamp(i +
+                        (((i / 2) % 2 == 0) ? (int)slider1.Value : 0 - (int)slider1.Value));
 
             wbmapR.update(transformR, Colors.Red);
             wbmapG.update(transformG, Colors.Green);
@@ -157,12 +157,30 @@ namespace blux
             MainMain.CustomRamp(transformR, transformG, transformB);
         }
 
-      
+        private void sliderPosterise2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int posterise_level = (int)sliderPosterise2.Value;
+            if (posterise_level <= 1)
+                throw new Exception("Posterise level 1 or below not allowed");
+            double multiplier = 255.0 / (posterise_level - 1.0);
 
+            foreach (var transform in new[] { transformR, transformG, transformB })
+            {
+                for (int i = 0; i < 256; i++)
+                {
+                    int index = (int)Math.Floor(i * (posterise_level / 256.0));
+                    transform[i] = (int)Math.Round(index * multiplier);
+                }
+            }
 
-       
+            wbmapR.update(transformR, Colors.Red);
+            wbmapG.update(transformG, Colors.Green);
+            wbmapB.update(transformB, Colors.Blue);
+
+            MainMain.CustomRamp(transformR, transformG, transformB);
         }
     }
+}
 
 public static class bitmapextensions
 {

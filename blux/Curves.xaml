@@ -10,12 +10,14 @@
         <Label Content="Method 2" HorizontalAlignment="Left" Margin="432,21,0,0" VerticalAlignment="Top" Foreground="Red"/>
         <Slider x:Name="slider1" HorizontalAlignment="Left" Margin="123,25,0,0" VerticalAlignment="Top" Width="186" ValueChanged="slider1_ValueChanged" Maximum="25"/>
         <Slider x:Name="slider2" HorizontalAlignment="Left" Margin="514,25,0,0" VerticalAlignment="Top" Width="186" ValueChanged="slider2_ValueChanged" Minimum="0" Maximum="50"/>
-        <Slider x:Name="sliderPosterise" HorizontalAlignment="Left" Margin="123,64,0,0" VerticalAlignment="Top" Width="186" ValueChanged="sliderPosterise_ValueChanged" Minimum="1" />
+        <Slider x:Name="sliderPosterise" HorizontalAlignment="Left" Margin="123,64,0,0" VerticalAlignment="Top" Width="186" ValueChanged="sliderPosterise_ValueChanged" Minimum="1" IsSnapToTickEnabled="True" />
         <Label Content="Poterise" HorizontalAlignment="Left" Margin="38,60,0,0" VerticalAlignment="Top" Foreground="Red"/>
         <TextBlock FontSize="10" HorizontalAlignment="Left" Margin="317,66,0,0" VerticalAlignment="Top" >
             <Run Text="{Binding ElementName=sliderPosterise, Path=Value}" />
         </TextBlock>
         <Slider x:Name="slider3" HorizontalAlignment="Left" Margin="514,59,0,0" VerticalAlignment="Top" Height="20" Width="186" ValueChanged="silder3_ValueChanged" Minimum="1" Maximum="255"/>
         <Label Content="Method 3" HorizontalAlignment="Left" Margin="432,56,0,0" VerticalAlignment="Top" Foreground="Red"/>
+        <Slider x:Name="sliderPosterise2" HorizontalAlignment="Left" Margin="123,88,0,0" VerticalAlignment="Top" Width="186"  Minimum="2" IsSnapToTickEnabled="True" ValueChanged="sliderPosterise2_ValueChanged" />
+        <TextBlock FontSize="10" HorizontalAlignment="Left" Margin="317,88,0,0" VerticalAlignment="Top" ><Run Text="{Binding Value, ElementName=sliderPosterise2}" /></TextBlock>
     </Grid>
 </Window>

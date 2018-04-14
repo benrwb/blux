@@ -173,7 +173,7 @@ namespace blux
 
         private void Curves_Click(object sender, RoutedEventArgs e)
         {
-            (new Curves()).ShowDialog();
+            (new Curves2()).ShowDialog();
         }
 
         private void Mag_Click(object sender, RoutedEventArgs e)
@@ -252,11 +252,11 @@ namespace blux
             }
         }
 
-        private static void SaveSettings(string program)
+        private static void SaveSettings(string settings)
         {
             using (StreamWriter sw = new StreamWriter(GetSettingsFileName()))
             {
-                sw.Write(program);
+                sw.Write(settings);
             }
         }
 
