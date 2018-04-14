@@ -2,26 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace blux
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         double _multiplier, _offset; // for linking the sliders together
@@ -91,26 +77,7 @@ namespace blux
 
        
 
-        private void txtEditor_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var vals = txtEditor.Text.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            if (vals.Length != 3) return;
-
-            try
-            {
-                MainMain.SetGamma(
-                    Convert.ToDouble(vals[0]),
-                    Convert.ToDouble(vals[1]),
-                    Convert.ToDouble(vals[2])
-                    );
-                lblError.Content = "";
-            }
-            catch (Exception ex)
-            {
-                lblError.Content = ex.Message;
-            }
-
-        }
+  
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -127,15 +94,17 @@ namespace blux
             double intensity = (slider1.Value - slider1.Minimum) / (slider1.Maximum - slider1.Minimum);
             lblIntensity.Content = intensity.ToString("N2");
             if (Method1.IsChecked)
-                MainMain.ColorTempToRGB1(slider1.Value, out red, out green, out blue);
+                MainMain.Method1(slider1.Value, out red, out green, out blue);
             else if (Method2.IsChecked)
-                MainMain.ColorTempToRGB2(slider1.Value, out red, out green, out blue);
+                MainMain.Method2(slider1.Value, out red, out green, out blue);
             else if (Method3.IsChecked)
                 MainMain.Method3(intensity, out red, out green, out blue);
             else if (Method4.IsChecked)
                 MainMain.Method4(intensity, out red, out green, out blue);
-            else // method 
+            else if (Method5.IsChecked)
                 MainMain.Method5(intensity, out red, out green, out blue);
+            else
+                throw new Exception("Unknown method");
 
             var rrrr = (float)Math.Round(red / 255, 4);
             var gggg = (float)Math.Round(green / 255, 4);
@@ -147,8 +116,41 @@ namespace blux
             bbbb = bbbb * (float)(slider2.Value / 100);
             // END brightness
 
-            txtEditor.Text = string.Format("{0:N3}\t{1:N3}\t{2:N3}", rrrr, gggg, bbbb);
+            txtEditor.Text = string.Format("{0:N3}\t{1:N3}\t{2:N3}", rrrr, gggg, bbbb); // will trigger txtEditor_TextChanged(), which calls update()
         }
+
+        private void txtEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+           update();
+        }
+
+        private void chkPosterise_Checked(object sender, RoutedEventArgs e)
+        {
+            update();
+        }
+
+        private void update()
+        {
+            var vals = txtEditor.Text.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            if (vals.Length != 3) return;
+
+            try
+            {
+                MainMain.SetGamma(
+                    Convert.ToDouble(vals[0]),
+                    Convert.ToDouble(vals[1]),
+                    Convert.ToDouble(vals[2]),
+                    chkPosterise.IsChecked.Value
+                    );
+                lblError.Content = "";
+            }
+            catch (Exception ex)
+            {
+                lblError.Content = ex.Message;
+            }
+        }
+
+
 
         private void tb1_TextChanged(object sender, TextChangedEventArgs e)
         {

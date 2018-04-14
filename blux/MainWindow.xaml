@@ -39,5 +39,6 @@
             </MenuItem>
         </Menu>
         <Label x:Name="lblIntensity" Content="Intensity"  HorizontalAlignment="Left" Margin="340,25,0,0"  VerticalAlignment="Top"/>
+        <CheckBox x:Name="chkPosterise" Content="Posterise" HorizontalAlignment="Left" Margin="266,90,0,0" VerticalAlignment="Top"  Checked="chkPosterise_Checked" Unchecked="chkPosterise_Checked"/>
     </Grid>
 </Window>

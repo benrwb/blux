@@ -131,7 +131,7 @@ namespace blux
             public UInt16[] Blue;
         }
 
-        public static void SetGamma(double red, double green, double blue)
+        public static void SetGamma(double red, double green, double blue, bool posterise)
         {
             if (red < 0.0 || red > 1.0 ||
                 green < 0.0 || green > 1.0 ||
@@ -148,6 +148,13 @@ namespace blux
             {
                 int value = i;
 
+                if (posterise)
+                {
+                    // see Curves2.xaml.cs / posterise_2bit_custom
+                    value = value >= 231 /* <-- threshold2 */ ? 255
+                          : value >= 124 /* <-- threshold1 */ ? 128
+                          : 0;
+                }
                 ramp.Red[i] = (ushort)(Convert.ToByte(value * red) << 8); // bitwise shift left
                 ramp.Green[i] = (ushort)(Convert.ToByte(value * green) << 8); // by 8 
                 ramp.Blue[i] = (ushort)(Convert.ToByte(value * blue) << 8); // same as multiplying by 256
@@ -283,7 +290,7 @@ namespace blux
         }
 
 
-        public static void ColorTempToRGB2(double temp, out double Red, out double Green, out double Blue)
+        public static void Method2(double temp, out double Red, out double Green, out double Blue)
         {
             // Green light not as bad as blue:
             // http://www.health.harvard.edu/staying-healthy/blue-light-has-a-dark-side
@@ -320,7 +327,7 @@ namespace blux
             }
         }
 
-        public static void ColorTempToRGB1(double temp, out double Red, out double Green, out double Blue)
+        public static void Method1(double temp, out double Red, out double Green, out double Blue)
         {
             // http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/ 
             // Start with a temperature, in Kelvin, somewhere between 1000 and 40000.  (Other values may work,
