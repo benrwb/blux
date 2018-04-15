@@ -1,24 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace blux
 {
-    /// <summary>
-    /// Interaction logic for Mag.xaml
-    /// </summary>
-    /// 
     /* Invert luma:
      * 	0	-0.5	-0.5	0	0	-0.5	0	-0.5	0	0	-0.5	-0.5	0	0	0	0	0	0	1	0	1	1	1	0	1
      */

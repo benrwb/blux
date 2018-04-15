@@ -26,9 +26,9 @@
         <Button x:Name="btnReset" Content="Defaults" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="75" Click="btnReset_Click"/>
         <Menu HorizontalAlignment="Stretch" Height="20"  VerticalAlignment="Top">
             <MenuItem Header="Effects">
-                <MenuItem Header="Curves" HorizontalAlignment="Left" Width="140" Click="Curves_Click"/>
-                <MenuItem Header="Mag" HorizontalAlignment="Left" Width="140" Click="Mag_Click"/>
-                <MenuItem Header="Mixer" HorizontalAlignment="Left" Width="140" Click="Mixer_Click"/>
+                <MenuItem Header="Noise/Posterise" HorizontalAlignment="Left" Click="Curves_Click"/>
+                <MenuItem Header="Red/Greyscale" HorizontalAlignment="Left"  Click="Mag_Click"/>
+                <MenuItem Header="RGB Mixer" HorizontalAlignment="Left" Click="Mixer_Click"/>
             </MenuItem>
             <MenuItem Header="Options">
                 <MenuItem Header="Method 1" HorizontalAlignment="Left" Width="140" IsCheckable="True" Name="Method1" Click="Method1_Click" />

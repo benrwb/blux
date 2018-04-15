@@ -58,10 +58,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Curves.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Curves2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -78,9 +74,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Curves.xaml.cs">
-      <DependentUpon>Curves.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="bitmapextensions.cs" />
     <Compile Include="Curves2.xaml.cs">
       <DependentUpon>Curves2.xaml</DependentUpon>
     </Compile>
