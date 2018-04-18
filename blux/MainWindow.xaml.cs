@@ -129,6 +129,21 @@ namespace blux
             update();
         }
 
+        private void chkPosterise_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CbaPassword pwd = new CbaPassword();
+            pwd.Owner = this;
+            if (pwd.ShowDialog().Value)
+            {
+                update();
+            }
+            else
+            {
+                CheckBox myCheckBox = e.Source as CheckBox;
+                myCheckBox.IsChecked = true;
+            }
+        }
+
         private void update()
         {
             var vals = txtEditor.Text.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -253,6 +268,8 @@ namespace blux
                 return _defaultSettings;
             }
         }
+
+       
 
         private static void SaveSettings(string settings)
         {

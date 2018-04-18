@@ -58,6 +58,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="CbaPassword.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Curves2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -75,6 +79,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="bitmapextensions.cs" />
+    <Compile Include="CbaPassword.xaml.cs">
+      <DependentUpon>CbaPassword.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Curves2.xaml.cs">
       <DependentUpon>Curves2.xaml</DependentUpon>
     </Compile>
