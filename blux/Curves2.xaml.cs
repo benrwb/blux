@@ -39,15 +39,15 @@ namespace blux
         public Curves2()
         {
             InitializeComponent();
-
+            
             _methods = new BindingList<MethodDetails>()
             {
-                new MethodDetails() { Name = "Linear", Function = linear },
-                new MethodDetails() { Name = "Noise1", Function = noise1, slider1Min = 0, slider1Max = 25 },
-                new MethodDetails() { Name = "Noise2", Function = noise2, slider1Min = 0, slider1Max = 50 },
-                new MethodDetails() { Name = "Noise3", Function = noise3, slider1Min = 1, slider1Max = 255 },
-                new MethodDetails() { Name = "Posterise1", Function = posterise1, slider1Min = 1, slider1Max = 10, slider1Default = 4 },
-                new MethodDetails() { Name = "Posterise2", Function = posterise2, slider1Min = 2, slider1Max = 10, slider1Default = 4 },
+                //new MethodDetails() { Name = "Linear", Function = linear },
+                //new MethodDetails() { Name = "Noise1", Function = noise1, slider1Min = 0, slider1Max = 25 },
+                //new MethodDetails() { Name = "Noise2", Function = noise2, slider1Min = 0, slider1Max = 50 },
+                //new MethodDetails() { Name = "Noise3", Function = noise3, slider1Min = 1, slider1Max = 255 },
+                //new MethodDetails() { Name = "Posterise1", Function = posterise1, slider1Min = 1, slider1Max = 10, slider1Default = 4 },
+                //new MethodDetails() { Name = "Posterise2", Function = posterise2, slider1Min = 2, slider1Max = 10, slider1Default = 4 },
                 new MethodDetails() { Name = "Posterise_1BitCustom", Function = posterise_1bit_custom, slider1Min = 100, slider1Max = 255, slider1Default = 173 },
                 new MethodDetails() { Name = "Posterise_2BitCustom", Function = posterise_2bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider1Default = 124, slider2Default = 231 },
                 new MethodDetails() { Name = "Posterise_3BitCustom", Function = posterise_3bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider3Min = 150, slider3Max = 250, slider1Default = 91, slider2Default = 174, slider3Default = 226 }
@@ -55,7 +55,7 @@ namespace blux
             cboMethod.DisplayMemberPath = "Name";
             cboMethod.ItemsSource = _methods;
 
-            apply();
+            cboMethod_SelectionChanged(null, null);
 
             image1.Source = wbmapR;
             image2.Source = wbmapG;
@@ -127,6 +127,7 @@ namespace blux
         private void cboMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var details = (MethodDetails)cboMethod.SelectedItem;
+            if (details == null) details = new MethodDetails();
 
             showHideSlider(1, details.slider1Min, details.slider1Max, details.slider1Default);
             showHideSlider(2, details.slider2Min, details.slider2Max, details.slider2Default);

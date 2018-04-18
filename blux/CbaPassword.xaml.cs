@@ -46,7 +46,7 @@ namespace blux
                 lblIncorrectPassword.Visibility = Visibility.Visible;
                 DispatcherTimer timer = new DispatcherTimer();
                 timer.Tick += Timer_Tick;
-                timer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+                timer.Interval = new TimeSpan(0, 0, 0, 0, 500);
                 timer.Start();
             }
         }

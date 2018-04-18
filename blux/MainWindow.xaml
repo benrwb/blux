@@ -26,7 +26,7 @@
         <Button x:Name="btnReset" Content="Defaults" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="75" Click="btnReset_Click"/>
         <Menu HorizontalAlignment="Stretch" Height="20"  VerticalAlignment="Top">
             <MenuItem Header="Effects">
-                <MenuItem Header="Noise/Posterise" HorizontalAlignment="Left" Click="Curves_Click"/>
+                <MenuItem Header="Posterise" HorizontalAlignment="Left" Click="Curves_Click"/>
                 <MenuItem Header="Red/Greyscale" HorizontalAlignment="Left"  Click="Mag_Click"/>
                 <MenuItem Header="RGB Mixer" HorizontalAlignment="Left" Click="Mixer_Click"/>
             </MenuItem>
@@ -39,6 +39,6 @@
             </MenuItem>
         </Menu>
         <Label x:Name="lblIntensity" Content="Intensity"  HorizontalAlignment="Left" Margin="340,25,0,0"  VerticalAlignment="Top"/>
-        <CheckBox x:Name="chkPosterise" Content="Posterise" HorizontalAlignment="Left" Margin="266,90,0,0" VerticalAlignment="Top" IsChecked="True" Checked="chkPosterise_Checked" Unchecked="chkPosterise_Unchecked"/>
+        <CheckBox x:Name="chkPosterise" Content="Posterise" HorizontalAlignment="Left" Margin="266,90,0,0" VerticalAlignment="Top" IsChecked="True" Checked="chkPosterise_Checked" Indeterminate="chkPosterise_Indeterminate" IsThreeState="True"/>
     </Grid>
 </Window>

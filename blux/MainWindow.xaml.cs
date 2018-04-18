@@ -129,20 +129,25 @@ namespace blux
             update();
         }
 
-        private void chkPosterise_Unchecked(object sender, RoutedEventArgs e)
+        private void chkPosterise_Indeterminate(object sender, RoutedEventArgs e)
         {
+            // Checkbox state is Indeterminate (IsChecked == null) while dialog is open
+
+            CheckBox myCheckBox = e.Source as CheckBox;
+
             CbaPassword pwd = new CbaPassword();
             pwd.Owner = this;
             if (pwd.ShowDialog().Value)
             {
+                myCheckBox.IsChecked = false;
                 update();
             }
             else
             {
-                CheckBox myCheckBox = e.Source as CheckBox;
                 myCheckBox.IsChecked = true;
             }
         }
+
 
         private void update()
         {
@@ -155,7 +160,7 @@ namespace blux
                     Convert.ToDouble(vals[0]),
                     Convert.ToDouble(vals[1]),
                     Convert.ToDouble(vals[2]),
-                    chkPosterise.IsChecked.Value
+                    chkPosterise.IsChecked == null || chkPosterise.IsChecked == true
                     );
                 lblError.Content = "";
             }
@@ -269,7 +274,7 @@ namespace blux
             }
         }
 
-       
+      
 
         private static void SaveSettings(string settings)
         {
