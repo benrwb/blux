@@ -50,7 +50,8 @@ namespace blux
                 //new MethodDetails() { Name = "Posterise2", Function = posterise2, slider1Min = 2, slider1Max = 10, slider1Default = 4 },
                 new MethodDetails() { Name = "Posterise_1BitCustom", Function = posterise_1bit_custom, slider1Min = 100, slider1Max = 255, slider1Default = 173 },
                 new MethodDetails() { Name = "Posterise_2BitCustom", Function = posterise_2bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider1Default = 124, slider2Default = 231 },
-                new MethodDetails() { Name = "Posterise_3BitCustom", Function = posterise_3bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider3Min = 150, slider3Max = 250, slider1Default = 91, slider2Default = 174, slider3Default = 226 }
+                new MethodDetails() { Name = "Posterise_2BitCustom2", Function = posterise_2bit_custom2, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider1Default = 124, slider2Default = 231, slider3Min=50, slider3Max=240, slider3Default = 128 },
+                new MethodDetails() { Name = "Posterise_3BitCustom", Function = posterise_3bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider3Min = 150, slider3Max = 250, slider1Default = 91, slider2Default = 187, slider3Default = 231 }
             };
             cboMethod.DisplayMemberPath = "Name";
             cboMethod.ItemsSource = _methods;
@@ -240,6 +241,31 @@ namespace blux
                     transform[i] = i >= threshold2 ? 255
                         : i >= threshold1 ? 128
                         : 0;
+                }
+            }
+        }
+
+        private void posterise_2bit_custom2()
+        {
+            int threshold1 = (int)slider1.Value;
+            int threshold2 = (int)slider2.Value;
+            int threshold3 = (int)slider3.Value;
+
+            foreach (var transform in new[] { transformR, transformG, transformB })
+            {
+                for (int i = 0; i < 256; i++)
+                {
+                    if (transform == transformG)
+                        // 3 bit
+                        transform[i] = i >= threshold2 ? 255
+                        : i >= threshold3 ? 170
+                        : i >= threshold1 ? 85
+                        : 0;
+                    else
+                        // 2 bit
+                        transform[i] = i >= threshold2 ? 255
+                            : i >= threshold1 ? 128
+                            : 0;
                 }
             }
         }

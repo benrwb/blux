@@ -149,9 +149,15 @@ namespace blux
                 if (posterise)
                 {
                     // see Curves2.xaml.cs / posterise_2bit_custom
-                    value = value >= 231 /* <-- threshold2 */ ? 255
-                          : value >= 124 /* <-- threshold1 */ ? 128
-                          : 0;
+                    // value = value >= 231 /* <-- threshold2 */ ? 255
+                    //       : value >= 124 /* <-- threshold1 */ ? 128
+                    //       : 0;
+
+                    // see Curves2.xaml.cs / posterise_3bit_custom
+                    value = value >= 231 /* <-- threshold3 */ ? 255
+                        : value >= 187 /* <-- threshold2 */ ? 170
+                        : value >= 91 /* <-- threshold1 */ ? 91
+                        : 0;
                 }
                 ramp.Red[i] = (ushort)(Convert.ToByte(value * red) << 8); // bitwise shift left
                 ramp.Green[i] = (ushort)(Convert.ToByte(value * green) << 8); // by 8 
