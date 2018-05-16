@@ -51,7 +51,7 @@ namespace blux
                 new MethodDetails() { Name = "Posterise_1BitCustom", Function = posterise_1bit_custom, slider1Min = 100, slider1Max = 255, slider1Default = 173 },
                 new MethodDetails() { Name = "Posterise_2BitCustom", Function = posterise_2bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider1Default = 124, slider2Default = 231 },
                 new MethodDetails() { Name = "Posterise_2BitCustom2", Function = posterise_2bit_custom2, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider1Default = 124, slider2Default = 231, slider3Min=50, slider3Max=240, slider3Default = 128 },
-                new MethodDetails() { Name = "Posterise_3BitCustom", Function = posterise_3bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider3Min = 150, slider3Max = 250, slider1Default = 91, slider2Default = 187, slider3Default = 231 }
+                new MethodDetails() { Name = "Posterise_3BitCustom", Function = posterise_3bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider3Min = 150, slider3Max = 250, slider1Default = 99, slider2Default = 187, slider3Default = 231 }
             };
             cboMethod.DisplayMemberPath = "Name";
             cboMethod.ItemsSource = _methods;
