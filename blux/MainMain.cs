@@ -155,7 +155,7 @@ namespace blux
 
                     // see Curves2.xaml.cs / posterise_3bit_custom
                     value = value >= 231 /* <-- threshold3 */ ? 255
-                        : value >= 187 /* <-- threshold2 */ ? 170
+                        : value >= 171 /* <-- threshold2 */ ? 170
                         : value >= 99 /* <-- threshold1 */ ? 91
                         : 0;
                 }
