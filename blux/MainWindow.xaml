@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="b.lux - Stop Blue Light Suppressing Melatonin" Height="255.6" Width="561">
     <Grid>
-        <TextBox x:Name="txtEditor" FontFamily="Consolas" Margin="191,142,0,0" TextWrapping="Wrap" TextChanged="txtEditor_TextChanged" AcceptsTab="True" HorizontalAlignment="Left" Width="285" Height="29" VerticalAlignment="Top"/>
         <Slider x:Name="slider1" HorizontalAlignment="Left" Margin="266,44,0,0" VerticalAlignment="Top" Width="205" Minimum="1000" Maximum="6500" ValueChanged="Slider_ValueChanged" SmallChange="1"  IsSnapToTickEnabled="True" Value="6499"/>
         <TextBlock FontSize="10" HorizontalAlignment="Left" Margin="483,46,0,0" VerticalAlignment="Top" >
             <Run Text="{Binding ElementName=slider1, Path=Value}" /><Run Text="K" />
@@ -17,12 +16,9 @@
         <CheckBox x:Name="chkLink" Content="Link"   HorizontalAlignment="Left" Margin="358,90,0,0" VerticalAlignment="Top" />
         <CheckBox x:Name="chkTimer" Content="Auto" HorizontalAlignment="Left" Margin="421,90,0,0" VerticalAlignment="Top" Click="chkTimer_Click" IsChecked="True" />
         <Label Content="R/G/B" HorizontalAlignment="Left" Margin="189,121,0,0" VerticalAlignment="Top" FontSize="10"/>
-        <Label x:Name="lblError" HorizontalAlignment="Left" Margin="34,262,0,0" Foreground="Red" Height="26" VerticalAlignment="Top" />
-        <TextBlock x:Name="lblPosterise" FontSize="10" HorizontalAlignment="Left" Margin="189,98,0,0" VerticalAlignment="Top" Foreground="Red" >
-            <Run Text="{Binding ElementName=sliderPosterise, Path=Value}" />
-        </TextBlock>
+        <Label x:Name="lblError" HorizontalAlignment="Left" Margin="189,189,0,0" Foreground="Red" Height="26" VerticalAlignment="Top" Width="354" />
         <TextBox x:Name="tb1" HorizontalAlignment="Left" Margin="10,25,0,35" TextWrapping="Wrap" Text="TextBox" Width="155" FontFamily="Consolas" AcceptsReturn="True" AcceptsTab="True"  VerticalScrollBarVisibility="Visible" TextChanged="tb1_TextChanged"/>
-        <Button x:Name="btnReload" Content="Set" HorizontalAlignment="Left" Margin="90,0,0,10" VerticalAlignment="Bottom" Width="75" Click="btnReload_Click"/>
+        <Button x:Name="btnReload" Content="Save" HorizontalAlignment="Left" Margin="90,0,0,10" VerticalAlignment="Bottom" Width="75" Click="btnReload_Click"/>
         <Button x:Name="btnReset" Content="Defaults" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="75" Click="btnReset_Click"/>
         <Menu HorizontalAlignment="Stretch" Height="20"  VerticalAlignment="Top">
             <MenuItem Header="Effects">
@@ -40,5 +36,6 @@
         </Menu>
         <Label x:Name="lblIntensity" Content="Intensity"  HorizontalAlignment="Left" Margin="340,25,0,0"  VerticalAlignment="Top"/>
         <CheckBox x:Name="chkPosterise" Content="Posterise" HorizontalAlignment="Left" Margin="266,90,0,0" VerticalAlignment="Top" IsChecked="True" Checked="chkPosterise_Checked" Indeterminate="chkPosterise_Indeterminate" IsThreeState="True"/>
+        <Label Content="_" x:Name="lblRGB" Foreground="Gray" FontFamily="Consolas" HorizontalAlignment="Left" Margin="191,144,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.263,0.538" Width="208"/>
     </Grid>
 </Window>

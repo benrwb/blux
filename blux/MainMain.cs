@@ -172,6 +172,14 @@ namespace blux
                 // Can't go below 0.50 (3400K) unless flux is installed
                 // and "Expand range" feature activated (flux.exe /unlockwingamma)
                 throw new Exception("Failed to set gamma ramp");
+				// Here's the reason why:
+                //     "[SetDeviceGammaRamp], in contrast to the [other APIs] described later in this section,
+                //     allows only a small deviation from an identity function. In fact, any entry
+                //     in the ramp must be within 32768 of the identity value. This restriction means 
+                //     that no app can turn the display completely black or to some other unreadable color."
+                //  -- https://msdn.microsoft.com/en-us/library/windows/desktop/jj635732(v=vs.85).aspx#setting_gamma_control_with_dxgi
+				// See also http://jonls.dk/2010/09/windows-gamma-adjustments/
+				// (via https://stackoverflow.com/a/33268698/58241)
         }
 
         public static void Method3(double intensity, out double Red, out double Green, out double Blue)

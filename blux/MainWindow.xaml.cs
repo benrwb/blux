@@ -12,9 +12,10 @@ namespace blux
     {
         double _multiplier, _offset; // for linking the sliders together
         Dictionary<int, int> _todLookup; // time of day lookup
+        DispatcherTimer _timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+        bool _finishedLoading = false;
 
-
-       static string _defaultSettings = @"00:00	1900
+        static string _defaultSettings = @"00:00	1900
 05:00	1900
 06:00	6500
 18:30	6500
@@ -33,51 +34,42 @@ namespace blux
             _offset = slider2.Minimum - (slider1.Minimum / _multiplier);
 
            
-            m_timer.Tick += t_Elapsed;
-            m_timer.Start();
+            _timer.Tick += t_Elapsed;
+            _timer.Start();
 
          
             tb1.Text = LoadSettings();
             _todLookup = MainMain.BuildTimeOfDayLookup(tb1.Text);
             btnReload.IsEnabled = false;
+
+            _finishedLoading = true;
         }
 
-       
-        DispatcherTimer m_timer = new DispatcherTimer() { Interval = System.TimeSpan.FromSeconds(1) };
+
+
+
+        private void chkTimer_Click(object sender, RoutedEventArgs e)
+        {
+            // "Auto" checkbox
+            _timer.IsEnabled = chkTimer.IsChecked.Value;
+        }
 
 
         void t_Elapsed(object sender, EventArgs e)
         {
-            slider1.Value = _todLookup[(int)DateTime.Now.TimeOfDay.TotalSeconds];
-            ////slider1.Value = MainMain.TempFromNow();
-            //double red, green, blue;
-            //MainMain.FadeToRed_FromNow(out red, out green, out blue);
-            //txtEditor.Text = string.Format("{0}\t{1}\t{2}", red, green, blue);
+            int oldValue = (int)slider1.Value;
+            int newValue = _todLookup[(int)DateTime.Now.TimeOfDay.TotalSeconds];
+
+            slider1.Value = newValue;
+
+            if (oldValue == newValue)
+            {
+                // update() only needs to be called if the slider's value *hasn't* changed
+                // (because if it *has* changed, then Slider_ValueChanged() will be triggered, which calls update())
+                update();
+            }
         }
 
-              
-        private void chkTimer_Click(object sender, RoutedEventArgs e)
-        {
-            m_timer.IsEnabled = chkTimer.IsChecked.Value;
-        }
-
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
-        }
-
-
-
-
-      
-
-       
-
-       
-
-  
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -89,6 +81,39 @@ namespace blux
                 if (sender == slider2)
                     slider1.Value = Math.Round((slider2.Value - _offset) * _multiplier, 0);
             }
+
+            update();
+        }
+
+       
+        private void chkPosterise_Checked(object sender, RoutedEventArgs e)
+        {
+            update();
+        }
+
+        private void chkPosterise_Indeterminate(object sender, RoutedEventArgs e)
+        {
+            // checkbox state is Indeterminate (IsChecked == null) while dialog is open
+
+            CheckBox myCheckBox = e.Source as CheckBox;
+
+            CbaPassword pwd = new CbaPassword();
+            pwd.Owner = this;
+            if (pwd.ShowDialog().Value)
+            {
+                myCheckBox.IsChecked = false;
+                update();
+            }
+            else
+            {
+                myCheckBox.IsChecked = true;
+            }
+        }
+
+
+        private void update()
+        {
+            if (!_finishedLoading) return;
 
             double red, green, blue;
             double intensity = (slider1.Value - slider1.Minimum) / (slider1.Maximum - slider1.Minimum);
@@ -116,56 +141,20 @@ namespace blux
             bbbb = bbbb * (float)(slider2.Value / 100);
             // END brightness
 
-            txtEditor.Text = string.Format("{0:N3}\t{1:N3}\t{2:N3}", rrrr, gggg, bbbb); // will trigger txtEditor_TextChanged(), which calls update()
-        }
-
-        private void txtEditor_TextChanged(object sender, TextChangedEventArgs e)
-        {
-           update();
-        }
-
-        private void chkPosterise_Checked(object sender, RoutedEventArgs e)
-        {
-            update();
-        }
-
-        private void chkPosterise_Indeterminate(object sender, RoutedEventArgs e)
-        {
-            // Checkbox state is Indeterminate (IsChecked == null) while dialog is open
-
-            CheckBox myCheckBox = e.Source as CheckBox;
-
-            CbaPassword pwd = new CbaPassword();
-            pwd.Owner = this;
-            if (pwd.ShowDialog().Value)
-            {
-                myCheckBox.IsChecked = false;
-                update();
-            }
-            else
-            {
-                myCheckBox.IsChecked = true;
-            }
-        }
-
-
-        private void update()
-        {
-            var vals = txtEditor.Text.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            if (vals.Length != 3) return;
-
             try
             {
                 MainMain.SetGamma(
-                    Convert.ToDouble(vals[0]),
-                    Convert.ToDouble(vals[1]),
-                    Convert.ToDouble(vals[2]),
+                    Convert.ToDouble(rrrr),
+                    Convert.ToDouble(gggg),
+                    Convert.ToDouble(bbbb),
                     chkPosterise.IsChecked == null || chkPosterise.IsChecked == true
-                    );
+                );
+                lblRGB.Content = string.Format("{0:N3}\t{1:N3}\t{2:N3}", rrrr, gggg, bbbb);
                 lblError.Content = "";
             }
             catch (Exception ex)
             {
+                lblRGB.Content = "";
                 lblError.Content = ex.Message;
             }
         }
@@ -274,7 +263,13 @@ namespace blux
             }
         }
 
-      
+
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
 
         private static void SaveSettings(string settings)
         {
