@@ -13,7 +13,7 @@
         <TextBlock FontSize="10" HorizontalAlignment="Left" Margin="483,69,0,0" VerticalAlignment="Top" >
             <Run Text="{Binding Value, ElementName=slider2}" /><Run Text="%" />
         </TextBlock>
-        <CheckBox x:Name="chkLink" Content="Link"   HorizontalAlignment="Left" Margin="358,90,0,0" VerticalAlignment="Top" />
+        <CheckBox x:Name="chkLink" Content="Link"   HorizontalAlignment="Left" Margin="189,90,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.829,7.133" />
         <CheckBox x:Name="chkTimer" Content="Auto" HorizontalAlignment="Left" Margin="421,90,0,0" VerticalAlignment="Top" Click="chkTimer_Click" IsChecked="True" />
         <Label Content="R/G/B" HorizontalAlignment="Left" Margin="189,121,0,0" VerticalAlignment="Top" FontSize="10"/>
         <Label x:Name="lblError" HorizontalAlignment="Left" Margin="189,189,0,0" Foreground="Red" Height="26" VerticalAlignment="Top" Width="354" />
@@ -35,7 +35,7 @@
             </MenuItem>
         </Menu>
         <Label x:Name="lblIntensity" Content="Intensity"  HorizontalAlignment="Left" Margin="340,25,0,0"  VerticalAlignment="Top"/>
-        <CheckBox x:Name="chkPosterise" Content="Posterise" HorizontalAlignment="Left" Margin="266,90,0,0" VerticalAlignment="Top" IsChecked="True" Checked="chkPosterise_Checked" Indeterminate="chkPosterise_Indeterminate" IsThreeState="True"/>
+        <CheckBox x:Name="chkPosterise" Content="Anti-distraction filter" HorizontalAlignment="Left" Margin="270,90,0,0" VerticalAlignment="Top" IsChecked="True" Checked="chkPosterise_Checked" Indeterminate="chkPosterise_Indeterminate" IsThreeState="True"/>
         <Label Content="_" x:Name="lblRGB" Foreground="Gray" FontFamily="Consolas" HorizontalAlignment="Left" Margin="191,144,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.263,0.538" Width="208"/>
     </Grid>
 </Window>

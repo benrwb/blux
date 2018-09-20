@@ -38,7 +38,7 @@ namespace blux
 
         // Defaults for Posterise_2BitCustom
         public const int P2_LOW = 80;
-        public const int P2_HIGH = 231;
+        public const int P2_HIGH = 230;
 
         // Defaults for Posterise_3BitCustom
         public const int P3_LOW = 80;
