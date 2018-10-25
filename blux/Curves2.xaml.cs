@@ -25,6 +25,9 @@ namespace blux
             public int slider3Min;
             public int slider3Max;
             public int slider3Default;
+            public int slider4Min;
+            public int slider4Max;
+            public int slider4Default;
         }
 
         public BindingList<MethodDetails> _methods;
@@ -60,7 +63,23 @@ namespace blux
                 new MethodDetails() { Name = "Posterise_1BitCustom", Function = posterise_1bit_custom, slider1Min = 100, slider1Max = 255, slider1Default = 173 },
                 new MethodDetails() { Name = "Posterise_2BitCustom", Function = posterise_2bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider1Default = P2_LOW, slider2Default = P2_HIGH },
                 //new MethodDetails() { Name = "Posterise_2BitCustom2", Function = posterise_2bit_custom2, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider1Default = 124, slider2Default = 231, slider3Min=50, slider3Max=240, slider3Default = 128 },
-                new MethodDetails() { Name = "Posterise_3BitCustom", Function = posterise_3bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider3Min = 150, slider3Max = 250, slider1Default = P3_LOW, slider2Default = P3_MED, slider3Default = P3_HIGH }
+                new MethodDetails() { Name = "Posterise_3BitCustom", Function = posterise_3bit_custom, slider1Min = 50, slider1Max = 200, slider2Min = 150, slider2Max = 250, slider3Min = 150, slider3Max = 250, slider1Default = P3_LOW, slider2Default = P3_MED, slider3Default = P3_HIGH },
+                new MethodDetails() {
+                    Name = "Posterise_4BitCustom",
+                    Function = posterise_4bit_custom,
+                    slider1Min = 10,
+                    slider1Max = 150,
+                    slider1Default = 48,
+                    slider2Min = 100,
+                    slider2Max = 200,
+                    slider2Default = 141,
+                    slider3Min = 150,
+                    slider3Max = 250,
+                    slider3Default = 186,
+                    slider4Min = 200,
+                    slider4Max = 255,
+                    slider4Default = 235
+                }
             };
             cboMethod.DisplayMemberPath = "Name";
             cboMethod.ItemsSource = _methods;
@@ -142,6 +161,7 @@ namespace blux
             showHideSlider(1, details.slider1Min, details.slider1Max, details.slider1Default);
             showHideSlider(2, details.slider2Min, details.slider2Max, details.slider2Default);
             showHideSlider(3, details.slider3Min, details.slider3Max, details.slider3Default);
+            showHideSlider(4, details.slider4Min, details.slider4Max, details.slider4Default);
 
             apply();
         }
@@ -292,6 +312,26 @@ namespace blux
                     transform[i] = i >= threshold3 ? 255
                         : i >= threshold2 ? 170
                         : i >= threshold1 ? 85
+                        : 0;
+                }
+            }
+        }
+
+        private void posterise_4bit_custom()
+        {
+            int threshold1 = (int)slider1.Value;
+            int threshold2 = (int)slider2.Value;
+            int threshold3 = (int)slider3.Value;
+            int threshold4 = (int)slider4.Value;
+
+            foreach (var transform in new[] { transformR, transformG, transformB })
+            {
+                for (int i = 0; i < 256; i++)
+                {
+                    transform[i] = i >= threshold4 ? 255
+                        : i >= threshold3 ? 192 
+                        : i >= threshold2 ? 128
+                        : i >= threshold1 ? 64
                         : 0;
                 }
             }

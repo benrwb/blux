@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="Noise/Posterise" Height="450" Width="800">
     <Grid>
-        <Image x:Name="image1"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="256" Height="256" MouseMove="image1_MouseMove" Stretch="None" Margin="4,106,0,0"/>
-        <Image x:Name="image2"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="256" Height="256" MouseMove="image1_MouseMove" Stretch="None" Margin="265,106,0,0"/>
-        <Image x:Name="image3"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="256" Height="256" MouseMove="image1_MouseMove" Stretch="None" Margin="526,106,0,0"/>
+        <Image x:Name="image1"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="256" Height="256" MouseMove="image1_MouseMove" Stretch="None" Margin="4,123,0,0"/>
+        <Image x:Name="image2"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="256" Height="256" MouseMove="image1_MouseMove" Stretch="None" Margin="265,123,0,0"/>
+        <Image x:Name="image3"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="256" Height="256" MouseMove="image1_MouseMove" Stretch="None" Margin="526,123,0,0"/>
         <Label Content="Method" HorizontalAlignment="Left" Margin="38,14,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.917,0.359"/>
         <ComboBox x:Name="cboMethod" HorizontalAlignment="Left" Margin="110,18,0,0" VerticalAlignment="Top" Width="171" SelectionChanged="cboMethod_SelectionChanged"/>
         <Slider x:Name="slider1" HorizontalAlignment="Left" Margin="401,14,0,0" VerticalAlignment="Top" Width="152" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True" />
@@ -27,5 +27,8 @@
         <TextBlock x:Name="number3" FontSize="10" HorizontalAlignment="Left" Margin="563,70,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.4,2.462" >
             <Run Text="{Binding ElementName=slider3, Path=Value}" />
         </TextBlock>
+        <Slider x:Name="slider4" HorizontalAlignment="Left" Margin="401,95,0,0" VerticalAlignment="Top" Width="152" ValueChanged="slider_ValueChanged" IsSnapToTickEnabled="True"  />
+        <Label x:Name="label4" Content="Param 4" HorizontalAlignment="Left" Margin="332,87,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="number4" FontSize="10" HorizontalAlignment="Left" Margin="563,95,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.4,2.462" ><Run Text="{Binding Value, ElementName=slider4}" /></TextBlock>
     </Grid>
 </Window>
