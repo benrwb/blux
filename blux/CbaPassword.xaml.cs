@@ -17,8 +17,6 @@ namespace blux
 {
     public partial class CbaPassword : Window
     {
-        string _Password = "compl1cated";
-
         public CbaPassword()
         {
             InitializeComponent();
@@ -35,8 +33,8 @@ namespace blux
 
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            if (txtPassword.Password == _Password)
-            {
+            if (txtPassword.Password == DateTime.Now.ToString("ddMMHHmm")) // password always changes so it's not in muscle memory
+            { 
                 this.DialogResult = true;
             }
             else
@@ -45,16 +43,23 @@ namespace blux
 
                 lblIncorrectPassword.Visibility = Visibility.Visible;
                 DispatcherTimer timer = new DispatcherTimer();
-                timer.Tick += Timer_Tick;
+                timer.Tick += HideMessage;
                 timer.Interval = new TimeSpan(0, 0, 0, 0, 500);
                 timer.Start();
             }
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void HideMessage(object sender, EventArgs e)
         {
             lblIncorrectPassword.Visibility = Visibility.Hidden;
             ((DispatcherTimer)sender).Stop();
         }
-    }              
+
+      
+
+        private void txtPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            lblHelpText.Visibility = txtPassword.SecurePassword.Length > 0 ? Visibility.Hidden : Visibility.Visible;
+        }
+    }
 }
