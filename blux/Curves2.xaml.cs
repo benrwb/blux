@@ -35,9 +35,9 @@ namespace blux
         WriteableBitmap wbmapR = new WriteableBitmap(255, 255, 96, 96, PixelFormats.Bgra32, null);
         WriteableBitmap wbmapG = new WriteableBitmap(255, 255, 96, 96, PixelFormats.Bgra32, null);
         WriteableBitmap wbmapB = new WriteableBitmap(255, 255, 96, 96, PixelFormats.Bgra32, null);
-        int[] transformR = new int[256];
-        int[] transformG = new int[256];
-        int[] transformB = new int[256];
+        int[] _transformR = new int[256];
+        int[] _transformG = new int[256];
+        int[] _transformB = new int[256];
 
         // Defaults for Posterise_2BitCustom
         public const int P2_LOW = 80;
@@ -79,7 +79,11 @@ namespace blux
                     slider4Min = 200,
                     slider4Max = 255,
                     slider4Default = 235
-                }
+                },
+                new MethodDetails() { Name = "Posterise_5level", Function = posterise_5level },
+                new MethodDetails() { Name = "Posterise_6level", Function = posterise_6level },
+                new MethodDetails() { Name = "Posterise_7level", Function = posterise_7level },
+                new MethodDetails() { Name = "Posterise_8level", Function = posterise_8level },
             };
             cboMethod.DisplayMemberPath = "Name";
             cboMethod.ItemsSource = _methods;
@@ -104,9 +108,9 @@ namespace blux
                 this.Title = string.Format("{0},{1}", x, y);
 
                 var array =
-                    sender == image1 ? transformR :
-                    sender == image2 ? transformG :
-                    transformB;
+                    sender == image1 ? _transformR :
+                    sender == image2 ? _transformG :
+                    _transformB;
 
                 var bmp =
                     sender == image1 ? wbmapR :
@@ -121,7 +125,7 @@ namespace blux
                 array[x] = y;
                 bmp.update(array, color);
 
-                MainMain.CustomRamp(transformR, transformG, transformB);
+                MainMain.CustomRamp(_transformR, _transformG, _transformB);
             }
         }
 
@@ -177,16 +181,16 @@ namespace blux
             if (details == null) return; // nothing selected
             details.Function();
            
-            wbmapR.update(transformR, Colors.Red);
-            wbmapG.update(transformG, Colors.Green);
-            wbmapB.update(transformB, Colors.Blue);
+            wbmapR.update(_transformR, Colors.Red);
+            wbmapG.update(_transformG, Colors.Green);
+            wbmapB.update(_transformB, Colors.Blue);
 
-            MainMain.CustomRamp(transformR, transformG, transformB);
+            MainMain.CustomRamp(_transformR, _transformG, _transformB);
         }
 
         private void linear()
         {
-            foreach (var array in new[] { transformR, transformG, transformB })
+            foreach (var array in new[] { _transformR, _transformG, _transformB })
                 for (int i = 0; i < 256; i++)
                     array[i] = i;
         }
@@ -194,7 +198,7 @@ namespace blux
         private void noise1()
         {
             for (int i = 0; i < 256; i++)
-                foreach (var transform in new[] { transformR, transformG, transformB })
+                foreach (var transform in new[] { _transformR, _transformG, _transformB })
                     transform[i] = Clamp(i +
                         (((i / 2) % 2 == 0) ? (int)slider1.Value : 0 - (int)slider1.Value));
         }
@@ -204,7 +208,7 @@ namespace blux
             Random r = new Random();
 
             for (int i = 0; i < 256; i++)
-                foreach (var transform in new[] { transformR, transformG, transformB })
+                foreach (var transform in new[] { _transformR, _transformG, _transformB })
                     transform[i] = Clamp(i + (0 - ((int)slider1.Value / 2)) + r.Next((int)slider1.Value));
         }
 
@@ -212,7 +216,7 @@ namespace blux
         {
             int step =(int)slider1.Value;
             for (int i = 0; i < 256; i++)
-                foreach (var transform in new[] { transformR, transformG, transformB })
+                foreach (var transform in new[] { _transformR, _transformG, _transformB })
                     transform[i] = Clamp(i +
                         (step - (i % step) - (i % step)));
         }
@@ -222,7 +226,7 @@ namespace blux
             double posterise_multiplier = 255.0 / (int)slider1.Value;
 
             for (int i = 0; i < 256; i++)
-                foreach (var transform in new[] { transformR, transformG, transformB })
+                foreach (var transform in new[] { _transformR, _transformG, _transformB })
                     transform[i] = (int)(Convert.ToInt32(i / posterise_multiplier) * posterise_multiplier);
         }
 
@@ -234,7 +238,7 @@ namespace blux
                 throw new Exception("Posterise level 1 or below not allowed");
             double multiplier = 255.0 / (posterise_level - 1.0);
 
-            foreach (var transform in new[] { transformR, transformG, transformB })
+            foreach (var transform in new[] { _transformR, _transformG, _transformB })
             {
                 for (int i = 0; i < 256; i++)
                 {
@@ -249,7 +253,7 @@ namespace blux
         {
             int threshold = (int)slider1.Value;
 
-            foreach (var transform in new[] { transformR, transformG, transformB })
+            foreach (var transform in new[] { _transformR, _transformG, _transformB })
             {
                 for (int i = 0; i < 256; i++)
                 {
@@ -263,7 +267,7 @@ namespace blux
             int threshold1 = (int)slider1.Value;
             int threshold2 = (int)slider2.Value;
 
-            foreach (var transform in new[] { transformR, transformG, transformB })
+            foreach (var transform in new[] { _transformR, _transformG, _transformB })
             {
                 for (int i = 0; i < 256; i++)
                 {
@@ -280,11 +284,11 @@ namespace blux
             int threshold2 = (int)slider2.Value;
             int threshold3 = (int)slider3.Value;
 
-            foreach (var transform in new[] { transformR, transformG, transformB })
+            foreach (var transform in new[] { _transformR, _transformG, _transformB })
             {
                 for (int i = 0; i < 256; i++)
                 {
-                    if (transform == transformG)
+                    if (transform == _transformG)
                         // 3 bit
                         transform[i] = i >= threshold2 ? 255
                         : i >= threshold3 ? 170
@@ -305,7 +309,7 @@ namespace blux
             int threshold2 = (int)slider2.Value;
             int threshold3 = (int)slider3.Value;
 
-            foreach (var transform in new[] { transformR, transformG, transformB })
+            foreach (var transform in new[] { _transformR, _transformG, _transformB })
             {
                 for (int i = 0; i < 256; i++)
                 {
@@ -324,7 +328,7 @@ namespace blux
             int threshold3 = (int)slider3.Value;
             int threshold4 = (int)slider4.Value;
 
-            foreach (var transform in new[] { transformR, transformG, transformB })
+            foreach (var transform in new[] { _transformR, _transformG, _transformB })
             {
                 for (int i = 0; i < 256; i++)
                 {
@@ -333,6 +337,39 @@ namespace blux
                         : i >= threshold2 ? 128
                         : i >= threshold1 ? 64
                         : 0;
+                }
+            }
+        }
+
+        private void posterise_5level()
+        {
+            posterise_nlevels(5);
+        }
+
+        private void posterise_6level()
+        {
+            posterise_nlevels(6);
+        }
+
+        private void posterise_7level()
+        {
+            posterise_nlevels(7);
+        }
+
+        private void posterise_8level()
+        {
+            posterise_nlevels(8);
+        }
+
+        private void posterise_nlevels(int nlevels)
+        {
+            var lookup = new ThresholdLookup(nlevels);
+
+            foreach (var transform in new[] { _transformR, _transformG, _transformB })
+            {
+                for (int v = 0; v <= 255; v++)
+                {
+                    transform[v] = lookup.Lookup(v);
                 }
             }
         }

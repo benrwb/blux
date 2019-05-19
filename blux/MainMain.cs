@@ -141,6 +141,7 @@ namespace blux
             ramp.Green = new ushort[256];
             ramp.Blue = new ushort[256];
 
+            var lookup = new ThresholdLookup(8);
 
             for (int i = 0; i <= 255; i++)
             {
@@ -154,10 +155,11 @@ namespace blux
                     //      : 0;
 
                     // see Curves2.xaml.cs / posterise_3bit_custom
-                    value = value >= Curves2.P3_HIGH /* <-- threshold3 */ ? 255
-                        : value >= Curves2.P3_MED /* <-- threshold2 */ ? 170
-                        : value >= Curves2.P3_LOW /* <-- threshold1 */ ? 91
-                        : 0;
+                    //value = value >= Curves2.P3_HIGH /* <-- threshold3 */ ? 255
+                    //    : value >= Curves2.P3_MED /* <-- threshold2 */ ? 170
+                    //    : value >= Curves2.P3_LOW /* <-- threshold1 */ ? 91
+                    //    : 0;
+                    value = lookup.Lookup(value);
                 }
                 ramp.Red[i] = (ushort)(Convert.ToByte(value * red) << 8); // bitwise shift left
                 ramp.Green[i] = (ushort)(Convert.ToByte(value * green) << 8); // by 8 
