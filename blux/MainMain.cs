@@ -16,6 +16,8 @@ namespace blux
 
         const int SW_SHOW = 5;
 
+       
+
         /// <summary>
         /// Application Entry Point.
         /// </summary>
@@ -129,6 +131,8 @@ namespace blux
             public UInt16[] Blue;
         }
 
+        private static Posterise.ReturnValues _posteriseLookup;
+
         public static void SetGamma(double red, double green, double blue, bool posterise)
         {
             if (red < 0.0 || red > 1.0 ||
@@ -141,29 +145,20 @@ namespace blux
             ramp.Green = new ushort[256];
             ramp.Blue = new ushort[256];
 
-            var lookup = new ThresholdLookup(8);
-
+            if (_posteriseLookup == null)
+            {
+                _posteriseLookup = new Posterise().ApplyMethod("posterise_5level_custom (125 colours)");
+            }
+            
             for (int i = 0; i <= 255; i++)
             {
-                int value = i;
+                int R_value = posterise ? _posteriseLookup.Red[i] : i;
+                int G_value = posterise ? _posteriseLookup.Green[i] : i;
+                int B_value = posterise ? _posteriseLookup.Blue[i] : i;
 
-                if (posterise)
-                {
-                    // see Curves2.xaml.cs / posterise_2bit_custom
-                    //value = value >= Curves2.P2_HIGH /* <-- threshold2 */ ? 255
-                    //      : value >=  Curves2.P2_LOW /* <-- threshold1 */ ? 128
-                    //      : 0;
-
-                    // see Curves2.xaml.cs / posterise_3bit_custom
-                    //value = value >= Curves2.P3_HIGH /* <-- threshold3 */ ? 255
-                    //    : value >= Curves2.P3_MED /* <-- threshold2 */ ? 170
-                    //    : value >= Curves2.P3_LOW /* <-- threshold1 */ ? 91
-                    //    : 0;
-                    value = lookup.Lookup(value);
-                }
-                ramp.Red[i] = (ushort)(Convert.ToByte(value * red) << 8); // bitwise shift left
-                ramp.Green[i] = (ushort)(Convert.ToByte(value * green) << 8); // by 8 
-                ramp.Blue[i] = (ushort)(Convert.ToByte(value * blue) << 8); // same as multiplying by 256
+                ramp.Red[i] = (ushort)(Convert.ToByte(R_value * red) << 8); // bitwise shift left
+                ramp.Green[i] = (ushort)(Convert.ToByte(G_value * green) << 8); // by 8 
+                ramp.Blue[i] = (ushort)(Convert.ToByte(B_value * blue) << 8); // same as multiplying by 256
             }
 
             var screenDC = GetDC(IntPtr.Zero);
