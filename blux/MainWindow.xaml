@@ -35,7 +35,7 @@
             </MenuItem>
         </Menu>
         <Label x:Name="lblIntensity" Content="Intensity"  HorizontalAlignment="Left" Margin="340,25,0,0"  VerticalAlignment="Top"/>
-        <CheckBox x:Name="chkPosterise" Content="Posterise" HorizontalAlignment="Left" Margin="337,90,0,0" VerticalAlignment="Top"  Checked="chkPosterise_Checked" Indeterminate="chkPosterise_Indeterminate" IsThreeState="True"/>
+        <CheckBox x:Name="chkPosterise" Content="Posterise" HorizontalAlignment="Left" Margin="337,90,0,0" VerticalAlignment="Top"  Checked="chkPosterise_Checked" Indeterminate="chkPosterise_Indeterminate" IsThreeState="True" IsChecked="True"/>
         <Label Content="_" x:Name="lblRGB" Foreground="Gray" FontFamily="Consolas" HorizontalAlignment="Left" Margin="191,144,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.263,0.538" Width="208"/>
     </Grid>
 </Window>

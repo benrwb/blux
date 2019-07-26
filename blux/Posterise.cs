@@ -91,7 +91,7 @@ namespace blux
                     Function = posterise_5level_custom,
                     slider1Min = 10,
                     slider1Max = 150,
-                    slider1Default = 48,
+                    slider1Default = 53, // changed from 48 to 53 to make Excel scrollbars visible
                     slider2Min = 100,
                     slider2Max = 200,
                     slider2Default = 141,
