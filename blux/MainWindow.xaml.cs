@@ -55,8 +55,20 @@ namespace blux
         }
 
 
+        int rePosterise = 0;
+
         void t_Elapsed(object sender, EventArgs e)
         {
+            if (rePosterise > 0)
+            {
+                rePosterise--;
+                if (rePosterise == 0)
+                {
+                    // Re-apply posterise after countdown has elapsed
+                    chkPosterise.IsChecked = true;
+                }
+            }
+
             int oldValue = (int)slider1.Value;
             int newValue = _todLookup[(int)DateTime.Now.TimeOfDay.TotalSeconds];
 
@@ -95,18 +107,18 @@ namespace blux
         {
             // checkbox state is Indeterminate (IsChecked == null) while dialog is open
 
-            CheckBox myCheckBox = e.Source as CheckBox;
-
             CbaPassword pwd = new CbaPassword();
             pwd.Owner = this;
             if (pwd.ShowDialog().Value)
             {
-                myCheckBox.IsChecked = false;
+                // Password correct - remove posterise effect
+                chkPosterise.IsChecked = false;
                 update();
+                rePosterise = 300; // re-apply after 5 minutes
             }
             else
             {
-                myCheckBox.IsChecked = true;
+                chkPosterise.IsChecked = true;
             }
         }
 
