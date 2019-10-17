@@ -24,7 +24,7 @@
             <MenuItem Header="Effects">
                 <MenuItem Header="Posterise" HorizontalAlignment="Left" Click="Curves_Click"/>
                 <MenuItem Header="Red/Greyscale" HorizontalAlignment="Left"  Click="Mag_Click"/>
-                <MenuItem Header="RGB Mixer" HorizontalAlignment="Left" Click="Mixer_Click"/>
+                <MenuItem Header="RGB Mixer" HorizontalAlignment="Left" Click="Mixer_Click" Visibility="Collapsed"/>
             </MenuItem>
             <MenuItem Header="Options">
                 <MenuItem Header="Method 1" HorizontalAlignment="Left" Width="140" IsCheckable="True" Name="Method1" Click="Method1_Click" />
