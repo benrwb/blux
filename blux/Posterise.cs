@@ -106,6 +106,7 @@ namespace blux
                 new MethodDetails() { Name = "Posterise_6level (216 colours)", Function = posterise_6level },
                 new MethodDetails() { Name = "Posterise_7level (343 colours)", Function = posterise_7level },
                 new MethodDetails() { Name = "Posterise_8level (512 colours)", Function = posterise_8level },
+                new MethodDetails() { Name = "Green channel only", Function = green_channel_only },
             };
         }
 
@@ -352,5 +353,19 @@ namespace blux
             }
             return rv;
         }
+
+        private ReturnValues green_channel_only(int[] sliderValues)
+        {
+            var rv = new ReturnValues();
+
+            for (int i = 0; i < 256; i++)
+            {
+                rv.Red[i] = 0;
+                rv.Green[i] = i;
+                rv.Blue[i] = 0;
+            }
+            return rv;
+        }
     }
 }
+ 
