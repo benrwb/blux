@@ -194,19 +194,25 @@ namespace blux
             btnReload.IsEnabled = false;
         }
 
-        private void Curves_Click(object sender, RoutedEventArgs e)
+        private void Posterise_Click(object sender, RoutedEventArgs e)
         {
-            (new Curves2()).ShowDialog();
+            var dialog = new Curves2();
+            dialog.Owner = this;
+            dialog.ShowDialog();
         }
 
-        private void Mag_Click(object sender, RoutedEventArgs e)
+        private void Red_Grayscale_Click(object sender, RoutedEventArgs e)
         {
-            (new Mag()).ShowDialog();
+            var dialog = new Mag();
+            dialog.Owner = this;
+            dialog.ShowDialog();
         }
 
-        private void Mixer_Click(object sender, RoutedEventArgs e)
+        private void RGB_Mixer_Click(object sender, RoutedEventArgs e)
         {
-            (new Mixer()).ShowDialog();
+            var dialog = new Mixer();
+            dialog.Owner = this;
+            dialog.ShowDialog();
         }
 
         private void Check(int number)
