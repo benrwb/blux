@@ -60,6 +60,7 @@ namespace blux
                     slider1Max = 255,
                     slider1Default = 173
                 },
+                new MethodDetails() { Name = "posterise_3level (27 colours)", Function = posterise_3level },
                 new MethodDetails()
                 {
                     Name = "posterise_3level_custom (27 colours)",
@@ -71,6 +72,7 @@ namespace blux
                     slider2Max = 250,
                     slider2Default = 230
                 },
+                new MethodDetails() { Name = "posterise_4level (64 colours)", Function = posterise_4level },
                 new MethodDetails()
                 {
                     Name = "posterise_4level_custom (64 colours)",
@@ -85,6 +87,7 @@ namespace blux
                     slider3Max = 250,
                     slider3Default = 236
                 },
+                new MethodDetails() { Name = "posterise_5level (125 colours)", Function = posterise_5level },
                 new MethodDetails()
                 {
                     Name = "posterise_5level_custom (125 colours)",
@@ -102,10 +105,9 @@ namespace blux
                     slider4Max = 255,
                     slider4Default = 235
                 },
-                new MethodDetails() { Name = "Posterise_5level (125 colours)", Function = posterise_5level },
-                new MethodDetails() { Name = "Posterise_6level (216 colours)", Function = posterise_6level },
-                new MethodDetails() { Name = "Posterise_7level (343 colours)", Function = posterise_7level },
-                new MethodDetails() { Name = "Posterise_8level (512 colours)", Function = posterise_8level },
+                new MethodDetails() { Name = "posterise_6level (216 colours)", Function = posterise_6level },
+                new MethodDetails() { Name = "posterise_7level (343 colours)", Function = posterise_7level },
+                new MethodDetails() { Name = "posterise_8level (512 colours)", Function = posterise_8level },
                 new MethodDetails() { Name = "Green channel only", Function = green_channel_only },
             };
         }
@@ -295,6 +297,16 @@ namespace blux
                                 : 0);
             }
             return rv;
+        }
+
+        private ReturnValues posterise_3level(int[] notused)
+        {
+            return posterise_nlevels(3);
+        }
+
+        private ReturnValues posterise_4level(int[] notused)
+        {
+            return posterise_nlevels(4);
         }
 
         private ReturnValues posterise_5level(int[] notused)
