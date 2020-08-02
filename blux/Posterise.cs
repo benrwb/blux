@@ -108,6 +108,7 @@ namespace blux
                 new MethodDetails() { Name = "posterise_6level (216 colours)", Function = posterise_6level },
                 new MethodDetails() { Name = "posterise_7level (343 colours)", Function = posterise_7level },
                 new MethodDetails() { Name = "posterise_8level (512 colours)", Function = posterise_8level },
+                new MethodDetails() { Name = "posterise_8level_custom", Function = posterise_8level_custom },
                 new MethodDetails() { Name = "Green channel only", Function = green_channel_only },
             };
         }
@@ -364,6 +365,56 @@ namespace blux
                 rv.AssignValue(i, Lookup(i));
             }
             return rv;
+        }
+
+
+        private ReturnValues posterise_8level_custom(int[] notused)
+        {
+            // First row = Input
+            // Second row = Output
+            // e.g. Between 0 and 25, output 0
+            //      Between 26 and 50, output 38
+            //      Between 51 and 100, output 75
+            // etc.
+            string a = @"
+0     25     50     100     150     200     218     236     255
+   0      38     75     125     175     209     227     255
+";
+            var data = ParseString(a);
+            var rv = new ReturnValues();
+            int pos = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                if ((pos < data.Length - 1) // avoid array out-of-bounds
+                    && (i == data[pos + 1].InValue)) // check next value
+                    pos++;
+                rv.AssignValue(i, data[pos].OutValue);
+            }
+            return rv;
+        }
+
+        public class ParsedStringItem
+        {
+            public int InValue;
+            public int OutValue;
+        }
+
+        private ParsedStringItem[] ParseString(string str)
+        {
+            string[] lines = str.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length != 2) throw new Exception("Error parsing string (wrong number of lines)");
+            var list = new List<ParsedStringItem>();
+
+            var line1 = lines[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var line2 = lines[1].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            return Enumerable.Range(0, line2.Length)
+                .Select(i => new ParsedStringItem()
+                {
+                    InValue = int.Parse(line1[i]),
+                    OutValue = int.Parse(line2[i])
+                })
+                .ToArray();
         }
 
         private ReturnValues green_channel_only(int[] sliderValues)
