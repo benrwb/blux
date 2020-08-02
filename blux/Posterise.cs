@@ -372,9 +372,9 @@ namespace blux
         {
             // First row = Input
             // Second row = Output
-            // e.g. Between 0 and 25, output 0
-            //      Between 26 and 50, output 38
-            //      Between 51 and 100, output 75
+            // e.g. Between 0 and 24, output 0
+            //      Between 25 and 49, output 38
+            //      Between 50 and 99, output 75
             // etc.
             string a = @"
 0     25     50     100     150     200     218     236     255
