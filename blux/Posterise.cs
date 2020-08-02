@@ -105,10 +105,10 @@ namespace blux
                     slider4Max = 255,
                     slider4Default = 235
                 },
+                new MethodDetails() { Name = "posterise_5level_custom2", Function = posterise_5level_custom2 },
                 new MethodDetails() { Name = "posterise_6level (216 colours)", Function = posterise_6level },
                 new MethodDetails() { Name = "posterise_7level (343 colours)", Function = posterise_7level },
                 new MethodDetails() { Name = "posterise_8level (512 colours)", Function = posterise_8level },
-                new MethodDetails() { Name = "posterise_8level_custom", Function = posterise_8level_custom },
                 new MethodDetails() { Name = "Green channel only", Function = green_channel_only },
             };
         }
@@ -368,7 +368,7 @@ namespace blux
         }
 
 
-        private ReturnValues posterise_8level_custom(int[] notused)
+        private ReturnValues posterise_5level_custom2(int[] notused)
         {
             // First row = Input
             // Second row = Output
@@ -377,8 +377,8 @@ namespace blux
             //      Between 50 and 99, output 75
             // etc.
             string a = @"
-0     25     50     100     150     200     218     236     255
-   0      38     75     125     175     209     227     255
+0     75     150     200     228     255
+   0     113     175     214     255
 ";
             var data = ParseString(a);
             var rv = new ReturnValues();

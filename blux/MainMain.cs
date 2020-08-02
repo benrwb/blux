@@ -147,7 +147,7 @@ namespace blux
 
             if (_posteriseLookup == null)
             {
-                _posteriseLookup = new Posterise().ApplyMethod("posterise_8level_custom");
+                _posteriseLookup = new Posterise().ApplyMethod("posterise_5level_custom2");
                 // posterise_5level (125 colours)
                 // posterise_5level_custom (125 colours)
                 // posterise_4level_custom (64 colours)
