@@ -32,3 +32,18 @@ Note that by default, Windows doesn't allow colour temperatures lower than 3400K
 
 Alternatively, if f.lux is installed, then the same thing can be accomplished by using the "Expand range" feature (or by running `flux.exe /unlockwingamma`)
 
+
+### Starting automatically
+
+To start the program automatically when Windows starts:
+
+
+
+1. Create a shortcut to the program
+
+2. Then copy it to to startup folder: 
+```
+    %USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+                     or %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
+```
+
