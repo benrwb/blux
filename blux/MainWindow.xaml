@@ -1,7 +1,7 @@
 ﻿<Window x:Class="blux.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="b.lux - Stop Blue Light Suppressing Melatonin" Height="255.6" Width="561">
+        Title="b.lux - Blue Light Filter" Height="255.6" Width="561">
     <Grid>
         <Slider x:Name="slider1" HorizontalAlignment="Left" Margin="266,44,0,0" VerticalAlignment="Top" Width="205" Minimum="1000" Maximum="6500" ValueChanged="Slider_ValueChanged" SmallChange="1"  IsSnapToTickEnabled="True" Value="6499"/>
         <TextBlock FontSize="10" HorizontalAlignment="Left" Margin="483,46,0,0" VerticalAlignment="Top" >
